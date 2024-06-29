@@ -1,0 +1,69 @@
+- ros_topic_name: "/clock"
+  gz_topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "ignition.msgs.Clock"
+  direction: "GZ_TO_ROS"
+
+# PosePublisher
+# - ros_topic_name: "/tf"
+#   gz_topic_name: "/model/<robot_name>/pose"
+#   ros_type_name: "tf2_msgs/msg/TFMessage"
+#   gz_type_name: "ignition.msgs.Pose_V"
+#   direction: "GZ_TO_ROS"
+
+# - ros_topic_name: "/tf_static"
+#   gz_topic_name: "/model/<robot_name>/pose_static"
+#   ros_type_name: "tf2_msgs/msg/TFMessage"
+#   gz_type_name: "ignition.msgs.Pose_V"
+#   direction: "GZ_TO_ROS"
+
+# - ros_topic_name: "/<robot_name>/odom"
+#   gz_topic_name: "/<robot_name>/odometry"
+#   ros_type_name: "nav_msgs/msg/Odometry"
+#   gz_type_name: "ignition.msgs.Odometry"
+#   direction: "GZ_TO_ROS"
+
+# Global odometry
+- ros_topic_name: "/odom"
+  gz_topic_name: "/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: "GZ_TO_ROS"
+
+# OdometryPublisher publish tf from `odom` to `chassis`, used for navigation2
+- ros_topic_name: "/tf"
+  gz_topic_name: "/odom/tf"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "ignition.msgs.Pose_V"
+  direction: "GZ_TO_ROS"
+
+# JointStatePublisher publish
+- ros_topic_name: "/<robot_name>/joint_state"
+  gz_topic_name: "/world/default/model/<robot_name>/joint_state"
+  ros_type_name: "sensor_msgs/msg/JointState"
+  gz_type_name: "ignition.msgs.Model"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "/<robot_name>/front_camera/image"
+  gz_topic_name: "/world/default/model/<robot_name>/link/front_industrial_camera/sensor/front_industrial_camera/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "ignition.msgs.Image"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "/<robot_name>/rplidar_a2/scan"
+  gz_topic_name: "/world/default/model/<robot_name>/link/front_rplidar_a2/sensor/front_rplidar_a2/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "ignition.msgs.LaserScan"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "/<robot_name>/livox/lidar"
+  gz_topic_name: "/world/default/model/<robot_name>/link/right_mid360/sensor/right_mid360_lidar/scan/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "ignition.msgs.PointCloudPacked"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "/<robot_name>/livox/imu"
+  gz_topic_name: "/world/default/model/<robot_name>/link/right_mid360/sensor/right_mid360_imu/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "ignition.msgs.IMU"
+  direction: "GZ_TO_ROS"

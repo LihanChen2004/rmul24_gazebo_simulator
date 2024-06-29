@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>rmul24_gazebo_simulator</name>
+	<version>1.0.0</version>
+	<description>rmul24_gazebo_simulator</description>
+
+	<maintainer email="lihanchen2004@163.com">Lihan Chen</maintainer>
+	<license>MIT</license>
+
+	<buildtool_depend>ament_cmake</buildtool_depend>
+
+	<exec_depend>ament_index_python</exec_depend>
+	<exec_depend>launch</exec_depend>
+	<exec_depend>launch_ros</exec_depend>
+	<exec_depend>robot_state_publisher</exec_depend>
+	<exec_depend>xacro</exec_depend>
+
+	<depend>ros_gz_sim</depend>
+	<depend>ros_gz_bridge</depend>
+	<depend>rmoss_core</depend>
+	<depend>rmoss_interfaces</depend>
+	<depend>rmoss_gz_base</depend>
+	<depend>rmoss_gz_cam</depend>
+	<depend>rmoss_gz_plugins</depend>
+	<depend>rmoss_gz_resources</depend>
+	<depend>sdformat_tools</depend>
+
+	<test_depend>ament_cmake_gtest</test_depend>
+	<test_depend>ament_lint_auto</test_depend>
+	<test_depend>ament_lint_common</test_depend>
+
+	<export>
+		<build_type>ament_cmake</build_type>
+	</export>
+</package>

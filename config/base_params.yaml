@@ -1,0 +1,30 @@
+/**:
+  ros__parameters:
+    world_name: "default"
+    chassis_controller:
+      follow_yaw: true
+      follow_yaw_pid:
+        p: 5.0
+        i: 0.0
+        d: 1.0
+        imin: -1.0
+        imax: 1.0
+        cmdmin: -1000.0
+        cmdmax: 1000.0
+    gimbal_controller:
+      pitch_pid:
+        p: 11.0
+        i: 0.0
+        d: 1.0
+        imin: -1.0
+        imax: 1.0
+        cmdmin: -1000.0
+        cmdmax: 1000.0
+      yaw_pid:
+        p: 11.0
+        i: 0.0
+        d: 0.0
+        imin: -1.0
+        imax: 1.0
+        cmdmin: -1000.0
+        cmdmax: 1000.0
