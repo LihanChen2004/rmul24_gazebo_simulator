@@ -12,7 +12,7 @@ rmul24_gazebo_simulator 是基于 Gazebo (Ignition 字母版本) 的仿真环境
 
 在 rmua19 标准机器人（rmua19_standard_robot）上增加相关传感器，构建不同机器人模型:
 
-- rmua19_standard_robot_a：搭载云台相机 industrial_camera和搭载激光雷达 rplidar_a2，其中相机放置有在 yaw 轴。
+- rmua19_standard_robot_a：搭载云台相机 industrial_camera 和搭载激光雷达 rplidar_a2，其中相机放置有在 yaw 轴。
 
 - rmua19_standard_robot_b：搭载云台相机 industrial_camera 和搭载激光雷达 rplidar_a2，其中相机放置有在 pitch 轴。
 
