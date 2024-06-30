@@ -24,15 +24,6 @@
         <!--plugins-->
         <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems -->
 
-        <!-- plugin for tf publisher -->
-        <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/pose_publisher/PosePublisher.hh -->
-        <!-- <plugin filename="ignition-gazebo-pose-publisher-system" name="gz::sim::systems::PosePublisher">
-            <publish_link_pose>true</publish_link_pose>
-            <publish_sensor_pose>true</publish_sensor_pose>
-            <use_pose_vector_msg>true</use_pose_vector_msg>
-            <static_publisher>true</static_publisher>
-        </plugin> -->
-
         <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
             <odom_publish_frequency>50</odom_publish_frequency>
             <odom_topic>/odom</odom_topic>
