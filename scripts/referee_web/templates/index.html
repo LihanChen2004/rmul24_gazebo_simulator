@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/uikit.min.css',_external=True) }}" />
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/control_panel.css',_external=True) }}" />
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css',_external=True) }}" />
+
+	<script type="text/javascript" src="{{ url_for('static',filename='js/socket.io.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/uikit.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/uikit-icons.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.6.0.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/control.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/web_socket_utils.js') }}"></script>
+</head>
+
+<body>
+	<div class="cp_container rowcenter">
+		<div class="sub_panel colcenter" id="red_block">
+		</div>
+		<div class="main_control shadow colcenter" id="main_control">
+			<div id="timer" class="rowcenter timer_box">
+				<div class="badge bg-light text-dark">
+					00:00
+				</div>
+			</div>
+			
+			<div class="rowcenter" style="margin: 10px;">
+				<button type="button" class="btn btn-primary btn-lg" style="margin: 10px;" onclick="start_game()">开始对局</button>
+				<button type="button" class="btn btn-warning btn-lg" style="margin: 10px;" onclick="stop_game()">终止对局</button>
+				<button type="button" class="btn btn-danger btn-lg" style="margin: 10px;" onclick="reset_game()">重启对局</button>
+			</div>
+		</div>
+		<div class="sub_panel colcenter" id="blue_block">
+
+		</div>
+	</div>
+</body>
+<script>
+	window.onload = () => {
+		init_socket()
+	}
+
+</script>
+
+</html>

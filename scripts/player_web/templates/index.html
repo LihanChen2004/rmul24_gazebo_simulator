@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/uikit.min.css',_external=True) }}" />
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/main.css',_external=True) }}" />
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css',_external=True) }}" />
+	<script type="text/javascript" src="{{ url_for('static',filename='js/variables.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/socket.io.js') }}"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script> -->
+	<script src="{{ url_for('static',filename='js/uikit.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/uikit-icons.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/jquery-3.6.0.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/control.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/web_socket_utils.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/listener.js') }}"></script>
+</head>
+
+<body>
+	<div class="container colcenter">
+		<div class="choose_robot_container rowcenter " id="choose_robot_container">
+			<!-- <div class="ch_box"  onclick="select_robot(this, 'standard_robot_red1')">
+				<img src="{{ url_for('static',filename='img/robot.jpg') }}" class="ch_img">
+				<span class="badge bg-success">可选</span>
+				<h5 class="card-title">standard_robot_red1</h5>
+			</div>
+			<div class="ch_box" onclick="select_robot(this)">
+				<img src="{{ url_for('static',filename='img/robot.jpg') }}" class="ch_img">
+				<span class="badge bg-success">可选</span>
+				<h5 class="card-title">standard_robot_red1</h5>
+			</div> -->
+		</div>
+		<button class="uk-button uk-button-primary" style="width:50%;z-index:10" onclick="start_game();" id="start_btn"
+			disabled>连接中</button>
+	</div>
+
+	<div class="colcenter" style="display:none;padding:5px;width:100vw;height:100vh;background-color: #fff;"
+		id="game_container">
+		<img class="aim_point" src="{{ url_for('static',filename='img/aim.png') }}">
+		<div class=" uk-width-1-1 uk-height-1-1">
+			<div class="rowbt" style="align-items: flex-start;position: fixed;top: 10px;width: 100%;padding: 10px;">
+				<div>
+					<div class="rowstart">
+						<div class="uk-label colstart" style="margin-right: 10px;" id="w"><span
+								style="font-size: 18px;">W</span>向前
+						</div>
+						<div class="uk-label colstart" style="margin-right: 10px;" id="s"><span
+								style="font-size: 18px;">S</span>向后
+						</div>
+						<div class="uk-label colstart" style="margin-right: 10px;" id="a"><span
+								style="font-size: 18px;">A</span>向左
+						</div>
+						<div class="uk-label colstart" style="margin-right: 10px;" id="d"><span
+								style="font-size: 18px;">D</span>向右
+						</div>
+						<div class="uk-label colstart" style="margin-right: 10px;" id="q"><span
+								style="font-size: 18px;">Q</span>加速
+						</div>
+						<div class="uk-label colstart" style="margin-right: 10px;" id="e"><span
+								style="font-size: 18px;">E</span>减速
+						</div>
+						<div class="uk-label colstart" style="margin-right: 20px;" id="shoot"><span
+								style="font-size: 18px;">左键</span>射击
+						</div>
+						<div class="uk-label colstart" style="margin-right: 10px;" id="esc"><span
+								style="font-size: 18px;">ESE</span>退出
+						</div>
+					</div>
+					<div class="rowstart" style="margin-top: 15px;">
+						<div class="uk-label rowcenter" style="margin-right: 10px;"><span>ping:</span>
+							<div id="ping">20ms</div>
+						</div>
+						<div class="uk-label rowcenter" style="margin-right: 10px;"><span>fps:</span>
+							<div id="fps">40</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="uk-label colstart" style="margin-right: 10px;padding: 5px;">
+						<img style="width:45px;height:45px" src="{{ url_for('static',filename='img/mouse.png') }}">
+						<span style="margin-top: 5px;">
+							方向
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="rowbt" style="align-items: flex-start;position: fixed;bottom: 10px;width: 100%;padding: 10px;">
+				<div>
+					<div class=" rowstart" style="margin-right: 10px;padding: 5px;">
+						<div style="margin-right: 5px;">
+							HP
+						</div>
+						<div class="progress" style="height:30px;width: 300px;">
+							<div id="hp_bar" class="progress-bar" role="progressbar" style="width: 25%;"><span
+									id="hp_text">500</span></div>
+						</div>
+					</div>
+				</div>
+				<div class=" rowstart" style="margin-right: 10px;padding: 5px;">
+					<!-- <div style="margin-right: 5px;">
+						red_HP
+					</div>
+					<div class="progress" style="height:30px;width: 300px;">
+						<div id="hp_bar_red" class="progress-bar bg-danger" role="progressbar" style="width: 25%;">
+							<span id="red_hp_text">500</span>
+						</div>
+					</div> -->
+				</div>
+			</div>
+
+		</div>
+		<!-- <div class=" uk-width-1-1 uk-height-1-1" style="padding: 10px;position: fixed;bottom: 10px;">
+			<div class="rowbt" style="align-items: flex-start;">
+				<div>
+				</div>
+				<div>
+					<div class="uk-label colstart" style="margin-right: 10px;padding: 5px;">
+						<progress id="js-progressbar" class="uk-progress" value="10" max="100"></progress>
+						<span style="margin-top: 5px;">
+							方向
+						</span>
+					</div>
+				</div>
+			</div>
+
+		</div> -->
+		<img class="video" id="camera">
+
+		</img>
+
+</body>
+<script>
+
+
+	var elem;
+	var game_container = $("#game_container");
+	window.onload = () => {
+		init_socket()
+	}
+
+	//------------------------------------
+	// 监听全屏事件
+	//------------------------------------
+	document.addEventListener('fullscreenchange', (e) => { fullscreenChange(e, game_container) }, false);
+	document.addEventListener('mozfullscreenchange', (e) => { fullscreenChange(e, game_container) }, false);
+	document.addEventListener('webkitfullscreenchange', (e) => { fullscreenChange(e, game_container) }, false);
+
+
+	//------------------------------------
+	// 监听指针锁定
+	//------------------------------------
+	document.addEventListener('pointerlockchange', pointerLockChange, false);
+	document.addEventListener('mozpointerlockchange', pointerLockChange, false);
+	document.addEventListener('webkitpointerlockchange', pointerLockChange, false);
+
+
+	//------------------------------------
+	// 监听指针锁定错误
+	//------------------------------------
+	document.addEventListener('pointerlockerror', pointerLockError, false);
+	document.addEventListener('mozpointerlockerror', pointerLockError, false);
+	document.addEventListener('webkitpointerlockerror', pointerLockError, false);
+
+
+	function start_game() {
+		window.socket.close()
+		window.socket = io(window.location.protocol + "//" + location.host + "/" + window.my_robot)
+		window.socket.on('connect', function () {
+			console.log('connect')
+			start_socket_transfer()
+			elem = document.getElementById("game_container");
+			// 开始于使元素进入全屏模式。目前的实现
+			// 要求元素在请求指针锁定前要处于全屏模式下
+			// -- 这在以后可能会发生改变。
+			elem.requestFullscreen = elem.requestFullscreen ||
+				elem.mozRequestFullscreen ||
+				elem.mozRequestFullScreen ||
+				elem.webkitRequestFullscreen;
+			elem.requestFullscreen();
+
+		})
+
+
+	}
+</script>
+
+</html>

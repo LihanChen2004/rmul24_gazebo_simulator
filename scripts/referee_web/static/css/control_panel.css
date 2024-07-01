@@ -1,0 +1,68 @@
+.rowcenter{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+}
+.rowbt{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+.colbt{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+.colcenter{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+.rowstart{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+.colstart{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+.cp_container{
+	width: 100vw;
+	height: 100vh;
+	background-color: #0F1015;
+}
+.video{
+	width: 100%;
+	height: 100%;
+}
+.sub_panel{
+	width: 32%;
+	height: 90%;
+	
+}
+.robo_container{
+	width: 90%;
+	height: 45%;
+	padding: 15px;
+	border: 5px solid #79797B;
+}
+.main_control{
+	height: 40%;
+	width: 32%;
+	border: 5px solid #79797B;
+}
+.timer_box{
+	width: 90%;
+	/* height: 30%; */
+}
+.timer_box>div{
+	font-size: 68px;
+}

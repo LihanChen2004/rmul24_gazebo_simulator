@@ -19,10 +19,11 @@ def generate_launch_description():
     robot_config = os.path.join(pkg_rmul24_gazebo_simulator, 'config', 'base_params.yaml')
     bridge_config = os.path.join(pkg_rmul24_gazebo_simulator, 'config', 'ros_gz_bridge.yaml')
     robot_sdf_path=os.path.join(pkg_rmul24_gazebo_simulator, 'resource', 'xmacro', 'rmul24_sentry_robot.sdf')
+    referee_config = os.path.join(pkg_rmul24_gazebo_simulator, 'config', 'referee_system_1v1.yaml')
 
     robots = [
-    {'name': 'red_standard_robot1', 'x_pose': '4.3', 'y_pose': '3.35', 'z_pose': '1.2', 'yaw': '0.0'},
-    # {'name': 'blue_standard_robot1', 'x_pose': '10.0', 'y_pose': '4.5', 'z_pose': '1.2', 'yaw': '3.14'},
+    {'name': 'red_standard_robot1', 'color': 'red', 'x_pose': '4.3', 'y_pose': '3.35', 'z_pose': '1.2', 'yaw': '0.0'},
+    {'name': 'blue_standard_robot1', 'color': 'blue', 'x_pose': '10.0', 'y_pose': '4.5', 'z_pose': '1.2', 'yaw': '3.14'},
     # ...
     ]
 
@@ -69,7 +70,7 @@ def generate_launch_description():
     # robot base for each robot
     for robot in robots:
 
-        robot_macro.generate({'global_initial_color': 'blue'})
+        robot_macro.generate({'global_initial_color': robot['color']})
         robot_xml = robot_macro.to_string()
         spawn_robot = Node(
             package="ros_gz_sim",
@@ -129,11 +130,41 @@ def generate_launch_description():
         )
         ld.add_action(robot_ign_bridge)
 
+    # referee system
+    referee_ign_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        namespace='referee_system',
+        arguments=[
+            '/referee_system/attack_info@std_msgs/msg/String[ignition.msgs.StringMsg',
+            '/referee_system/shoot_info@std_msgs/msg/String[ignition.msgs.StringMsg',
+        ],
+        remappings=[
+            ('/referee_system/attack_info','/referee_system/ign/attack_info'),
+            ('/referee_system/shoot_info','/referee_system/ign/shoot_info'),
+        ],
+    )
+    referee_ign_bridge2 = Node(
+        package='rmoss_gz_bridge',
+        executable='pose_bridge',
+        namespace='referee_system',
+        parameters=[{'robot_filter': True}],
+    )
+    referee_system = Node(
+        package='rmul24_gazebo_simulator',
+        executable='simple_competition_1v1.py',
+        namespace='referee_system',
+        parameters=[referee_config],
+    )
+
     ld.add_action(append_enviroment_worlds)
     ld.add_action(append_enviroment_models)
     ld.add_action(declare_position_x_cmd)
     ld.add_action(declare_position_y_cmd)
     ld.add_action(declare_orientation_yaw_cmd)
     ld.add_action(gazebo)
+    ld.add_action(referee_system)
+    ld.add_action(referee_ign_bridge2)
+    ld.add_action(referee_ign_bridge)
 
     return ld
