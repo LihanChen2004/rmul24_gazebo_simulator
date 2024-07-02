@@ -110,6 +110,7 @@ def generate_launch_description():
             name="robot_state_publisher",
             parameters=[{
                 'robot_description': robot_urdf_xml,
+                'publish_frequency': 20.0,
             }],
             remappings=[
                 ('/robot_description', f"{robot['name']}/robot_description"),

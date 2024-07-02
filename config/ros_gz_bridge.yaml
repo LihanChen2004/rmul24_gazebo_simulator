@@ -4,18 +4,11 @@
   gz_type_name: "ignition.msgs.Clock"
   direction: "GZ_TO_ROS"
 
-# Global odometry
-- ros_topic_name: "/odom"
-  gz_topic_name: "/odom"
+# mecanum plugin odometry
+- ros_topic_name: "/<robot_name>/odometry"
+  gz_topic_name: "/<robot_name>/odometry"
   ros_type_name: "nav_msgs/msg/Odometry"
   gz_type_name: "ignition.msgs.Odometry"
-  direction: "GZ_TO_ROS"
-
-# OdometryPublisher publish tf from `odom` to `chassis`, used for navigation2
-- ros_topic_name: "/<robot_name>/tf"
-  gz_topic_name: "/odom/tf"
-  ros_type_name: "tf2_msgs/msg/TFMessage"
-  gz_type_name: "ignition.msgs.Pose_V"
   direction: "GZ_TO_ROS"
 
 # JointStatePublisher publish

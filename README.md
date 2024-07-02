@@ -88,11 +88,17 @@ pip install xmacro
 
 - [ ] mid360 改名为 livox_mid360
 
-- [ ] TF Tree 都加上命名空间
+- [x] TF Tree 都加上命名空间
 
-- [ ] 删除 ignition plugin 中的 `ignition_frame_id`
+- [x] 删除 ignition plugin 中的 `ignition_frame_id`
 
 - [ ] launch 中分离世界生成和机器人生成
+
+## 配套导航仿真仓库
+
+本仿真包可以与 navigation2 结合使用，实现多机器人的导航功能。
+
+详见 [rm_nav_bringup](https://github.com/LihanChen2004/rm_nav_bringup)
 
 ## 维护者及开源许可证
 

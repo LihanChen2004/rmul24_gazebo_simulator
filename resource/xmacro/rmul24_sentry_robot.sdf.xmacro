@@ -15,7 +15,7 @@
         <pose>0 0 0.15 0 0 0</pose>
         <xmacro_block name="rmua19_standard_robot" sticker_type="${global_armor_sticker_type}"/>
         <!--rplidar a2-->
-        <xmacro_block name="rplidar_a2" prefix="front_" parent="chassis" pose="0.155 0 0.1 0 0 0" update_rate="30" samples="400" visualize="true"/>
+        <xmacro_block name="rplidar_a2" prefix="front_" parent="chassis" pose="0.155 0 0.1 0 0 0" update_rate="10" samples="400" visualize="true"/>
         <!--livox-->
         <xmacro_block name="livox" prefix="right_" parent="gimbal_yaw" pose="0 -0.12 0.25 0 0 0" update_rate="10" samples="1500"/>
         <!--industrial camera-->
@@ -24,16 +24,7 @@
         <!--plugins-->
         <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems -->
 
-        <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
-            <odom_publish_frequency>50</odom_publish_frequency>
-            <odom_topic>/odom</odom_topic>
-            <odom_frame>odom</odom_frame>
-            <robot_base_frame>chassis</robot_base_frame>
-            <tf_topic>/odom/tf</tf_topic>
-        </plugin>
-
         <!--plugin for joint state sensor-->
-        <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/joint_state_publisher/JointStatePublisher.hh -->
         <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher">
         </plugin>
 
