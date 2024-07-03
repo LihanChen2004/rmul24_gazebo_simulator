@@ -14,6 +14,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     pkg_rmul24_gazebo_simulator = get_package_share_directory('rmul24_gazebo_simulator')
+    ign_config_path = os.path.join(pkg_rmul24_gazebo_simulator, 'resource', 'ign', 'gui.config')
     world_sdf_path = os.path.join(pkg_rmul24_gazebo_simulator, 'resource', 'worlds', 'rmul24_world.sdf')
     robot_xmacro_path = os.path.join(pkg_rmul24_gazebo_simulator, 'resource', 'xmacro', 'rmul24_sentry_robot.sdf.xmacro')
     robot_config = os.path.join(pkg_rmul24_gazebo_simulator, 'config', 'base_params.yaml')
@@ -63,7 +64,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             "gz_version": "6",
-            "gz_args" : world_sdf_path
+            "ign_args": world_sdf_path + ' --gui-config ' + ign_config_path,
         }.items()
     )
 
