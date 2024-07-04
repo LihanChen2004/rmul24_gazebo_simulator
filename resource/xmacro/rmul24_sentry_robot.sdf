@@ -6,8 +6,8 @@
 <sdf version="1.7">
 	<!--include defination-->
 	<!--property defination-->
-	<!--rmua19_standard_robot A model-->
-	<model name="rmua19_standard_robot_a">
+	<!--rmul24_sentry_robot model-->
+	<model name="rmul24_sentry_robot">
 		<pose>0 0 0.15 0 0 0</pose>
 		<!--chassis-->
 		<link name="chassis">
@@ -1057,11 +1057,12 @@
 				</geometry>
 			</collision>
 			<sensor name="front_rplidar_a2" type="gpu_lidar">
-				<!-- <ignition_frame_id>/red_standard_robot1/rplidar_a2</ignition_frame_id> -->
+				<!-- TODO: remove ignition_frame_id -->
+				<ignition_frame_id>front_rplidar_a2</ignition_frame_id>
 				<pose>0 0 0.03 0 0 0</pose>
 				<always_on>true</always_on>
 				<visualize>true</visualize>
-				<update_rate>30.0</update_rate>
+				<update_rate>10.0</update_rate>
 				<ray>
 					<scan>
 						<horizontal>
@@ -1208,23 +1209,7 @@
 		</link>
 		<!--plugins-->
 		<!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems -->
-		<!-- plugin for tf publisher -->
-		<!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/pose_publisher/PosePublisher.hh -->
-		<!-- <plugin filename="ignition-gazebo-pose-publisher-system" name="gz::sim::systems::PosePublisher">
-            <publish_link_pose>true</publish_link_pose>
-            <publish_sensor_pose>true</publish_sensor_pose>
-            <use_pose_vector_msg>true</use_pose_vector_msg>
-            <static_publisher>true</static_publisher>
-        </plugin> -->
-		<!-- <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
-            <odom_publish_frequency>50</odom_publish_frequency>
-            <odom_topic>/odom</odom_topic>
-            <odom_frame>odom</odom_frame>
-            <robot_base_frame>red_standard_robot1</robot_base_frame>
-            <tf_topic>/odom/tf</tf_topic>
-        </plugin> -->
 		<!--plugin for joint state sensor-->
-		<!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/joint_state_publisher/JointStatePublisher.hh -->
 		<plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher">
         </plugin>
 		<!--plugin for light bar-->

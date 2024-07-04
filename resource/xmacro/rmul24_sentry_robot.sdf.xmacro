@@ -9,8 +9,8 @@
     <!--property defination-->
     <xmacro_define_value name="global_initial_color" value="none" />
     <xmacro_define_value name="global_armor_sticker_type" value="num1" />
-    <!--rmua19_standard_robot A model-->
-    <model name="rmua19_standard_robot_a">
+    <!--rmul24_sentry_robot model-->
+    <model name="rmul24_sentry_robot">
 
         <pose>0 0 0.15 0 0 0</pose>
         <xmacro_block name="rmua19_standard_robot" sticker_type="${global_armor_sticker_type}"/>
