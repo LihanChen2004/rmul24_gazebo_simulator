@@ -20,6 +20,8 @@ rmul24_gazebo_simulator 是基于 Gazebo (Ignition 字母版本) 的仿真环境
 
 构建 RoboMaster University League 2024 简易场地 (models/RMUL_2024):
 
+- 在 world 中使用 [PerformerDetector](https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/performer_detector/PerformerDetector.hh) 插件实现区域 RFID 检测。仍在开发中，尚未与裁判系统对接
+
 ## 一. 基本使用
 
 ### 1.1 环境配置
@@ -78,7 +80,7 @@ pip install xmacro
     ros2 run rmua19_gazebo_simulator simple_competition_1v1_referee.py
     ```
 
-    弹丸伤害为10，每个机器人HP为500，直到HP为0时，裁判系统输出胜利者，程序退出。（可重新运行开始）
+    弹丸伤害为 10，每个机器人HP为 500 ，直到 HP 为 0 时，裁判系统输出胜利者，程序退出。（可重新运行开始）
 
     通过解析并处理攻击信息 `/referee_system/attack_info` （包括射击者信息以及击中目标信息）实现裁判功能
 

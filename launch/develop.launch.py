@@ -2,7 +2,7 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, AppendEnvironmentVariable
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, AppendEnvironmentVariable, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from nav2_common.launch import ReplaceString
@@ -131,6 +131,18 @@ def generate_launch_description():
             ],
         )
         ld.add_action(robot_ign_bridge)
+
+        # Execute service call after spawning robots
+        # https://gazebosim.org/api/gazebo/6.9/levels.html#Runtime-performers
+        set_performer_service = ExecuteProcess(
+            cmd=['ign', 'service', '-s', '/world/default/level/set_performer',
+                 '--reqtype', 'ignition.msgs.StringMsg',
+                 '--reptype', 'ignition.msgs.Boolean',
+                 '--timeout', '2000',
+                 '--req', f'data: "{robot["name"]}"'],
+            output='screen'
+        )
+        ld.add_action(set_performer_service)
 
     # referee system
     referee_ign_bridge = Node(

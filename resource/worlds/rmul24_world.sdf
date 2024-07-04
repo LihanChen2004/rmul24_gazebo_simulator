@@ -43,6 +43,67 @@
       <static>true</static>
     </model>
 
+    <model name="red_supplier">
+      <static>true</static>
+      <pose>1.86 6.85 1.2 0 0 0</pose>
+      <link name='body'>
+        <visual name='visual'>
+          <transparency>0.9</transparency>
+          <geometry>
+            <box>
+              <size>1 2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.0 1.0 0.0 1</ambient>
+            <diffuse>0.0 1.0 0.0 1</diffuse>
+            <specular>0.5 0.5 0.5 1</specular>
+          </material>
+          <cast_shadows>false</cast_shadows>
+        </visual>
+      </link>
+      <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/performer_detector/PerformerDetector.hh -->
+      <plugin filename="ignition-gazebo-performer-detector-system" name="gz::sim::systems::PerformerDetector">
+        <!-- <topic>/model/red_supplier/performer_detector/status</topic> -->
+        <geometry>
+          <box>
+            <size>0 0 0</size>
+          </box>
+        </geometry>
+        <pose>0 0 0 0 0 0</pose>
+      </plugin>
+    </model>
+
+    <model name="blue_supplier">
+      <static>true</static>
+      <pose>12.85 0.85 1.2 0 0 0</pose>
+      <link name='body'>
+        <visual name='visual'>
+          <transparency>0.9</transparency>
+          <geometry>
+            <box>
+              <size>1 2 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.0 1.0 0.0 1</ambient>
+            <diffuse>0.0 1.0 0.0 1</diffuse>
+            <specular>0.5 0.5 0.5 1</specular>
+          </material>
+          <cast_shadows>false</cast_shadows>
+        </visual>
+      </link>
+      <plugin filename="ignition-gazebo-performer-detector-system" name="gz::sim::systems::PerformerDetector">
+        <!-- <topic>/model/blue_supplier/performer_detector/status</topic> -->
+        <geometry>
+          <box>
+            <size>0 0 0</size>
+          </box>
+        </geometry>
+        <pose>0 0 0 0 0 0</pose>
+      </plugin>
+    </model>
+
     <model name='ground_plane'>
       <static>true</static>
       <link name='link'>
