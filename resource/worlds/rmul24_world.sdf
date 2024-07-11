@@ -64,7 +64,7 @@
       </link>
       <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/performer_detector/PerformerDetector.hh -->
       <plugin filename="ignition-gazebo-performer-detector-system" name="gz::sim::systems::PerformerDetector">
-        <!-- <topic>/model/red_supplier/performer_detector/status</topic> -->
+        <topic>/model/red_supplier/performer_detector/status</topic>
         <geometry>
           <box>
             <size>0 0 0</size>

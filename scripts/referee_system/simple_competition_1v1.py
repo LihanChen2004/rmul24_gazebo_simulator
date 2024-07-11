@@ -43,14 +43,11 @@ class StandardRobot:
         self.enable_control_pub = node.create_publisher(Bool, enable_control_topic, 10)
         enable_power_topic = '/referee_system/' + robot_name + '/enable_power'
         self.enable_power_pub = node.create_publisher(Bool, enable_power_topic, 10)
+        enable_supply_area_topic = '/referee_system/' + robot_name + '/enable_supply_area'
         self.reset_data()
 
     def reset_data(self):
-        self.max_hp = self.node.get_parameter("max_hp").get_parameter_value().integer_value
-        self.total_projectiles = self.node.get_parameter("initial_projectiles").get_parameter_value().integer_value
-        self.remain_hp = self.max_hp
-        self.used_projectiles = 0
-        self.hit_projectiles = 0
+        self.max_hp = self.node.get_parameter("max_hp").getgz_pose_cb
         self.survive = True
 
     def enable_power(self, enable):
@@ -119,6 +116,11 @@ class SimpleRefereeSystem():
             TransformStamped,
             '/referee_system/ign/set_pose',
             10)
+        self.referee_cmd_sub = node.create_subscription(
+            RefereeCmd,
+            '/referee_system/referee_cmd',
+            self.referee_cmd_callback,
+            1)
         self.referee_cmd_sub = node.create_subscription(
             RefereeCmd,
             '/referee_system/referee_cmd',

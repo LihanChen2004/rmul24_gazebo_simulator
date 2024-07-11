@@ -164,6 +164,12 @@ def generate_launch_description():
         namespace='referee_system',
         parameters=[{'robot_filter': True}],
     )
+    referee_ign_rfid_bridge2 = Node(
+        package='rmoss_gz_bridge',
+        executable='rfid_bridge',
+        namespace='referee_system',
+        parameters=[],
+    )
     referee_system = Node(
         package='rmul24_gazebo_simulator',
         executable='simple_competition_1v1.py',
@@ -179,6 +185,7 @@ def generate_launch_description():
     ld.add_action(gazebo)
     ld.add_action(referee_system)
     ld.add_action(referee_ign_bridge2)
+    ld.add_action(referee_ign_rfid_bridge2)
     ld.add_action(referee_ign_bridge)
 
     return ld

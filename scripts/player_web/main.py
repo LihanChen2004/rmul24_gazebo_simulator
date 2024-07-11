@@ -6,10 +6,8 @@
 #    flask
 # ==========================================
 from threading import Lock
-from flask import Flask, render_template, session, request, \
-    copy_current_request_context
-from flask_socketio import SocketIO, emit, join_room, leave_room, \
-    close_room, rooms, disconnect, Namespace
+from flask import Flask, render_template, session, request
+from flask_socketio import SocketIO, emit, Namespace
 from engineio.payload import Payload
 from flask_cors import CORS
 import logging
