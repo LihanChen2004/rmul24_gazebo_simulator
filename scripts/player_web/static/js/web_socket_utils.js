@@ -3,6 +3,7 @@
 //------------------------------------
 function init_socket() {
     window.socket = io();
+    window.supplyStatus = 'disactive';
     socket.on('connect', function () {
         console.log('connect')
         // $('#red_hp_text').text(300)
@@ -59,12 +60,24 @@ function start_socket_transfer() {
     });
     socket.on('supply', function (message) {
         if (message.value === 'active') {
-            console.log('supply', message.value)
-            $('#supplyModal').modal('show');
+            $('#supplyModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            }).modal('show');
             window.supplyStatus = message.value;
+    
+            // 解绑鼠标
+            document.exitPointerLock = document.exitPointerLock ||
+                document.mozExitPointerLock ||
+                document.webkitExitPointerLock;
+            document.exitPointerLock();
+            // 解除监听器
+            document.removeEventListener("mousemove", mouseListener);
         }
-        else {
+        else{
             window.supplyStatus = 'disactive';
+    
+            
         }
     });
     // socket.on('red_hp', function (message) {
@@ -96,6 +109,28 @@ function start_socket_transfer() {
         var ammoAmount = document.getElementById('ammoAmount').value;
         // Send the ammo amount through socket
         socket.emit('exchange', { ammo: ammoAmount });
+        // Close the modal
+        $('#supplyModal').modal('hide');
+        // 重新绑定鼠标
+        elem.requestPointerLock = elem.requestPointerLock ||
+        elem.mozRequestPointerLock ||
+        elem.webkitRequestPointerLock;
+        elem.requestPointerLock();
+        // 开启鼠标监听
+        document.addEventListener("mousemove", mouseListener);
+        $(document).mousedown(function(e){
+                if(1 == e.which){
+                    // console.log("你点击了鼠标左键");
+                    mouse_down_controller()
+                }
+            });
+        $(document).mouseup(function(e){
+                if(1 == e.which){
+                    // console.log("你松开了了鼠标左键");
+                    mouse_up_controller()
+                }
+            });
+        console.log('exchange', ammoAmount);
     }
     window.control_timer = setInterval(() => {
         socket.emit('control', active_map);
