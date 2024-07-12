@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Bool, String
-from rmoss_interfaces.msg import RefereeCmd,RobotStatus
+from rmoss_interfaces.msg import RefereeCmd,RobotStatus,RfidStatus,RfidStatusArray
 from geometry_msgs.msg import TransformStamped
 from tf2_msgs.msg import TFMessage
 
@@ -43,7 +43,7 @@ class StandardRobot:
         self.enable_control_pub = node.create_publisher(Bool, enable_control_topic, 10)
         enable_power_topic = '/referee_system/' + robot_name + '/enable_power'
         self.enable_power_pub = node.create_publisher(Bool, enable_power_topic, 10)
-        enable_supply_area_topic = '/referee_system/' + robot_name + '/enable_supply_area'
+        enable_supply_area_topic = '/referee_system/ign/rfid_info'
         self.reset_data()
 
     def reset_data(self):
@@ -121,6 +121,11 @@ class SimpleRefereeSystem():
             '/referee_system/referee_cmd',
             self.referee_cmd_callback,
             1)
+        self.referee_rfid_info_sub = node.create_subscription(
+            RfidStatusArray,
+            '/referee_system/ign/rfid_info',
+            self.referee_rfid_info_callback,
+            1)
         self.referee_cmd_sub = node.create_subscription(
             RefereeCmd,
             '/referee_system/referee_cmd',
@@ -129,6 +134,7 @@ class SimpleRefereeSystem():
         self.robots = {}
         self.robots['red_standard_robot1'] = StandardRobot(node = node, robot_name = 'red_standard_robot1')
         self.robots['blue_standard_robot1'] = StandardRobot(node = node, robot_name = 'blue_standard_robot1')
+        self.rfid_status = RfidStatus()
         self.timer_cb = node.create_timer(0.5, self.timer_cb)
         self.attack_info_sub  # prevent unused variable warning
         self.timer_cb  # prevent unused variable warning
@@ -196,6 +202,9 @@ class SimpleRefereeSystem():
         # publish robot status
         for robot in self.robots.values():
             robot.publish_status()
+
+    def referee_rfid_info_callback(self, msg: RfidStatusArray):
+        self.rfid_status = msg.rfid_status
 
     def referee_cmd_callback(self, msg: RefereeCmd):
         if msg.cmd == msg.PREPARATION:

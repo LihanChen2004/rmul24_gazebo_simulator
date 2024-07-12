@@ -41,6 +41,30 @@
 	<div class="colcenter" style="display:none;padding:5px;width:100vw;height:100vh;background-color: #fff;"
 		id="game_container">
 		<img class="aim_point" src="{{ url_for('static',filename='img/aim.png') }}">
+		<!-- Supply Modal -->
+		<div id="supplyModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">弹药兑换</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>请选择兑换的弹药量：</p>
+						<select id="ammoAmount" class="form-control">
+							<option value="10">10</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="exchangeAmmo();">兑换</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class=" uk-width-1-1 uk-height-1-1">
 			<div class="rowbt" style="align-items: flex-start;position: fixed;top: 10px;width: 100%;padding: 10px;">
 				<div>
@@ -65,6 +89,9 @@
 						</div>
 						<div class="uk-label colstart" style="margin-right: 20px;" id="shoot"><span
 								style="font-size: 18px;">左键</span>射击
+						</div>
+						<div class="uk-label colstart" style="margin-right: 20px;" id="shoot"><span
+								style="font-size: 18px;">O</span>兑换弹药
 						</div>
 						<div class="uk-label colstart" style="margin-right: 10px;" id="esc"><span
 								style="font-size: 18px;">ESE</span>退出

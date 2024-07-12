@@ -26,6 +26,8 @@ from rmoss_interfaces.msg import ChassisCmd
 from rmoss_interfaces.msg import GimbalCmd
 from rmoss_interfaces.msg import ShootCmd
 from rmoss_interfaces.msg import RobotStatus
+from rmoss_interfaces.msg import RfidStatusArray
+from rmoss_interfaces.msg import RfidStatus
 import time
 
 # ==========================================
@@ -85,6 +87,9 @@ class RobotSocketHandler(Namespace):
         self.yaw_lower_bound = -1.37
         self.pitch_upper_bound = 1.1
         self.pitch_lower_bound = -0.9
+        self.rfid_status=RfidStatus()
+        self.rfid_status.robot_name=self.robot_name
+        self.supply_active=False
 
         # ==========================================
         #   pubs
@@ -93,6 +98,22 @@ class RobotSocketHandler(Namespace):
         self.gimbal_cmd_pub = node.create_publisher(GimbalCmd, '/%s/robot_base/gimbal_cmd' % (robot_name), 10)
         self.shoot_cmd_pub = node.create_publisher(ShootCmd, '/%s/robot_base/shoot_cmd' % (robot_name), 10)
 
+        # ==========================================
+        #   subs
+        # ==========================================
+        self.rfid_status_sub = node.create_subscription(RfidStatusArray, '/referee_system/ign/rfid_info', self.rfid_status_callback, 10)
+
+    def rfid_status_callback(self, message):
+        for status in message.robot_rfid_status:
+            if status.robot_name == self.robot_name:
+                if status.supplier_area_is_triggered == True:
+                    self.rfid_status.supplier_area_is_triggered=True
+                else:
+                    self.rfid_status.supplier_area_is_triggered=False
+                if status.center_area_is_triggered == True:
+                    self.rfid_status.center_area_is_triggered=True
+                else:
+                    self.rfid_status.center_area_is_triggered=False
 
     def on_connect(self):
         global info_thread, node, robot_names, chosen_robot_dict
@@ -119,6 +140,10 @@ class RobotSocketHandler(Namespace):
             self.speed = max((self.speed - 1), 1.0)
         if message['shoot']:
             shoot = True
+        if message['o']:
+            if self.rfid_status.supplier_area_is_triggered == True:
+                self.supply_active=True
+                emit('supply', {'value': 'active'}, namespace='/'+self.robot_name)
         movement_yaw = message['movementX']
         movement_pitch = message['movementY']
         if movement_pitch<=0:
@@ -145,7 +170,7 @@ class BaseSocketHandler(Namespace):
     # ==========================================
     def on_connect(self):
     #     global info_thread, node, robot_names, chosen_robot_dict
-    #     with thread_lock:
+    #     with thread_lock:RobotSocketHandler
     #         if info_thread is None:
     #             info_thread = socketio.start_background_task(ros_info_thread, node, robot_name)
         emit('robot_names', {'list': robot_names, 'chosen': chosen_robot_dict})

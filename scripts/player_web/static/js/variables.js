@@ -10,7 +10,8 @@ var key_map = {
 	81:"q",
 	69:"e",
 	82:"reset",
-	27:"esc"
+	27:"esc",
+	79:"o"
 	
 }
 
@@ -24,6 +25,7 @@ var active_map = {
 	"d":false,
 	"q":false,
 	"e":false,
+	"o":false,
 	"shoot":false,
 	"reset":false,
 	"movementX":0,

@@ -57,6 +57,12 @@ function start_socket_transfer() {
         // blue_bar.val(hp+'')
         $('#hp_text').text(hp + '')
     });
+    socket.on('supply', function (message) {
+        if (message.value === 'active') {
+            console.log('supply', message.value)
+            $('#supplyModal').modal('show');
+        }
+    });
     // socket.on('red_hp', function (message) {
     //     console.log('red_hp', message.value)
     //     var hp = message.value
@@ -82,6 +88,11 @@ function start_socket_transfer() {
         // console.log(ping)
         $('#ping').text(ping + 'ms');
     });
+    window.exchangeAmmo = function() {
+        var ammoAmount = document.getElementById('ammoAmount').value;
+        // Send the ammo amount through socket
+        socket.emit('exchange', { ammo: ammoAmount });
+    }
     window.control_timer = setInterval(() => {
         socket.emit('control', active_map);
         // console.log(active_map)
