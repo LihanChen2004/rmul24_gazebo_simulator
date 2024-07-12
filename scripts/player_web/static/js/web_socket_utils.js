@@ -73,6 +73,8 @@ function start_socket_transfer() {
             document.exitPointerLock();
             // 解除监听器
             document.removeEventListener("mousemove", mouseListener);
+            $(document).unbind("mousedown");
+	        $(document).unbind("mouseup");
         }
         else{
             window.supplyStatus = 'disactive';
@@ -105,6 +107,29 @@ function start_socket_transfer() {
         // console.log(ping)
         $('#ping').text(ping + 'ms');
     });
+    window.cancelExchange = function() {
+        $('#supplyModal').modal('hide');
+        // 重新绑定鼠标
+        elem.requestPointerLock = elem.requestPointerLock ||
+        elem.mozRequestPointerLock ||
+        elem.webkitRequestPointerLock;
+        elem.requestPointerLock();
+        // 开启鼠标监听
+        document.addEventListener("mousemove", mouseListener);
+        $(document).mousedown(function(e){
+                if(1 == e.which){
+                    // console.log("你点击了鼠标左键");
+                    mouse_down_controller()
+                }
+            });
+        $(document).mouseup(function(e){
+                if(1 == e.which){
+                    // console.log("你松开了了鼠标左键");
+                    mouse_up_controller()
+                }
+            });
+        console.log('cancel exchange');
+    }
     window.exchangeAmmo = function() {
         var ammoAmount = document.getElementById('ammoAmount').value;
         // Send the ammo amount through socket
