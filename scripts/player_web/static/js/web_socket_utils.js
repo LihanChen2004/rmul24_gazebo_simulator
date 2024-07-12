@@ -61,6 +61,10 @@ function start_socket_transfer() {
         if (message.value === 'active') {
             console.log('supply', message.value)
             $('#supplyModal').modal('show');
+            window.supplyStatus = message.value;
+        }
+        else {
+            window.supplyStatus = 'disactive';
         }
     });
     // socket.on('red_hp', function (message) {
