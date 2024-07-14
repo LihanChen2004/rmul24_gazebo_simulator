@@ -98,7 +98,7 @@ class RobotSocketHandler(Namespace):
         #   srv
         # ==========================================
         self.ammo_exchange_client = node.create_client(ExchangeAmmon, 
-                                                       '/referee_system/ammo_exchange')
+                                                       '/exchange_ammo')
 
         # ==========================================
         #   pubs
