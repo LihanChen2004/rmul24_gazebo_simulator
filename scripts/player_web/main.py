@@ -11,6 +11,7 @@ from flask_socketio import SocketIO, emit, Namespace
 from engineio.payload import Payload
 from flask_cors import CORS
 import logging
+import threading
 
 # ==========================================
 #   packages for ros
@@ -28,6 +29,7 @@ from rmoss_interfaces.msg import ShootCmd
 from rmoss_interfaces.msg import RobotStatus
 from rmoss_interfaces.msg import RfidStatusArray
 from rmoss_interfaces.msg import RfidStatus
+from rmoss_interfaces.srv import ExchangeAmmon
 import time
 
 # ==========================================
@@ -61,6 +63,7 @@ info_thread = None
 thread_lock = Lock()
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+lock = threading.Lock()
 
 # =====================================================================  Classes   ==========================================
 # ==========================================
@@ -70,10 +73,10 @@ class RobotSocketHandler(Namespace):
     def __init__(self, namespace):
         super().__init__(namespace=namespace)
         self.robot_name = namespace[1:]
-        
         print("self.robot_name:"+self.robot_name)
         # self.node = None
         self.info_thread = None
+        
 
         # ==========================================
         #   some states
@@ -90,6 +93,12 @@ class RobotSocketHandler(Namespace):
         self.rfid_status=RfidStatus()
         self.rfid_status.robot_name=self.robot_name
         self.supply_active=False
+
+        # ==========================================
+        #   srv
+        # ==========================================
+        self.ammo_exchange_client = node.create_client(ExchangeAmmon, 
+                                                       '/referee_system/ammo_exchange')
 
         # ==========================================
         #   pubs
@@ -115,6 +124,26 @@ class RobotSocketHandler(Namespace):
                 else:
                     self.rfid_status.center_area_is_triggered=False
 
+    def on_exchange(self, message):
+        ammo_request = message.get('ammo_request', 0)
+        req = ExchangeAmmon.Request()
+        req.robot_name = self.robot_name
+        req.ammo_amount = ammo_request
+        future = self.ammo_exchange_client.call_async(req)
+        future.add_done_callback(self.exchange_callback)
+
+    def exchange_callback(self, future):
+        with lock:
+            try:
+                response = future.result()
+                if response.success:
+                    print('Exchange ammo request sent successfully')
+                else:
+                    print('Failed to exchange ammo: ' + response.message)
+            except Exception as e:
+                print('Service call failed: %r' % (e,))
+
+            
     def on_connect(self):
         global info_thread, node, robot_names, chosen_robot_dict
         chosen_robot_dict[self.robot_name] = True

@@ -24,8 +24,7 @@ import cv2
 import base64
 import numpy as np
 from std_msgs.msg import Int32
-from rmoss_interfaces.msg import RefereeCmd
-from rmoss_interfaces.msg import RobotStatus
+from rmoss_interfaces.msg import RefereeCmd,RobotStatus
 import time
 
 # ==========================================
@@ -76,7 +75,7 @@ class RefereeSocketHandler(Namespace):
         #   pubs
         # ==========================================
         self.referee_pub = node.create_publisher(RefereeCmd, '/referee_system/referee_cmd', 10)
-
+        
 
     def on_connect(self):
         global info_thread, node, robot_names, chosen_robot_dict

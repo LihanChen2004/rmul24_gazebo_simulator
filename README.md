@@ -77,7 +77,7 @@ pip install xmacro
 5. 运行裁判系统
 
     ```sh
-    ros2 run rmua19_gazebo_simulator simple_competition_1v1_referee.py
+    ros2 run rmul24_gazebo_simulator simple_competition_1v1.py
     ```
 
     弹丸伤害为 10，每个机器人HP为 500 ，直到 HP 为 0 时，裁判系统输出胜利者，程序退出。（可重新运行开始）

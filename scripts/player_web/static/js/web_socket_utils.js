@@ -131,11 +131,15 @@ function start_socket_transfer() {
         console.log('cancel exchange');
     }
     window.exchangeAmmo = function() {
-        var ammoAmount = document.getElementById('ammoAmount').value;
-        // Send the ammo amount through socket
-        socket.emit('exchange', { ammo: ammoAmount });
+        var ammoAmount = document.getElementById("ammoAmount").value;
         // Close the modal
         $('#supplyModal').modal('hide');
+
+        // trun into integer
+        ammo_request = parseInt(ammoAmount);
+
+        // Send the ammo amount through socket
+        socket.emit('exchange', { ammo_request: ammo_request});
         // 重新绑定鼠标
         elem.requestPointerLock = elem.requestPointerLock ||
         elem.mozRequestPointerLock ||
@@ -155,7 +159,7 @@ function start_socket_transfer() {
                     mouse_up_controller()
                 }
             });
-        console.log('exchange', ammoAmount);
+        console.log('exchange amount', ammoAmount);
     }
     window.control_timer = setInterval(() => {
         socket.emit('control', active_map);

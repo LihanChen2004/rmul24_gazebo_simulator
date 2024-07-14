@@ -4,7 +4,8 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Bool, String
-from rmoss_interfaces.msg import RefereeCmd,RobotStatus,RfidStatus,RfidStatusArray
+from rmoss_interfaces.msg import RefereeCmd,RobotStatus,RfidStatusArray
+from rmoss_interfaces.srv import ExchangeAmmon
 from geometry_msgs.msg import TransformStamped
 from tf2_msgs.msg import TFMessage
 
@@ -43,11 +44,14 @@ class StandardRobot:
         self.enable_control_pub = node.create_publisher(Bool, enable_control_topic, 10)
         enable_power_topic = '/referee_system/' + robot_name + '/enable_power'
         self.enable_power_pub = node.create_publisher(Bool, enable_power_topic, 10)
-        enable_supply_area_topic = '/referee_system/ign/rfid_info'
         self.reset_data()
 
     def reset_data(self):
-        self.max_hp = self.node.get_parameter("max_hp").getgz_pose_cb
+        self.max_hp = self.node.get_parameter("max_hp").get_parameter_value().integer_value
+        self.total_projectiles = self.node.get_parameter("initial_projectiles").get_parameter_value().integer_value
+        self.remain_hp = self.max_hp
+        self.used_projectiles = 0
+        self.hit_projectiles = 0
         self.survive = True
 
     def enable_power(self, enable):
@@ -97,6 +101,22 @@ class SimpleRefereeSystem():
         self.node = node
         self.node.declare_parameter('max_hp', 500)
         self.node.declare_parameter('initial_projectiles', 100)
+        # ==========================================
+        #   srv
+        # ==========================================
+        self.exchange_ammo_srv = node.create_service(ExchangeAmmon, 
+                                                     '/exchange_ammo', 
+                                                     self.handle_exchange_ammo)
+
+
+        # ==========================================
+        #   subs
+        # ==========================================
+        self.rfid_status_sub = node.create_subscription(
+            RfidStatusArray, 
+            '/referee_system/ign/rfid_info', 
+            self.rfid_status_callback, 
+            10)
         self.attack_info_sub = node.create_subscription(
             String,
             '/referee_system/ign/attack_info',
@@ -121,24 +141,47 @@ class SimpleRefereeSystem():
             '/referee_system/referee_cmd',
             self.referee_cmd_callback,
             1)
-        self.referee_rfid_info_sub = node.create_subscription(
-            RfidStatusArray,
-            '/referee_system/ign/rfid_info',
-            self.referee_rfid_info_callback,
-            1)
-        self.referee_cmd_sub = node.create_subscription(
-            RefereeCmd,
-            '/referee_system/referee_cmd',
-            self.referee_cmd_callback,
-            1)
         self.robots = {}
         self.robots['red_standard_robot1'] = StandardRobot(node = node, robot_name = 'red_standard_robot1')
         self.robots['blue_standard_robot1'] = StandardRobot(node = node, robot_name = 'blue_standard_robot1')
-        self.rfid_status = RfidStatus()
         self.timer_cb = node.create_timer(0.5, self.timer_cb)
         self.attack_info_sub  # prevent unused variable warning
         self.timer_cb  # prevent unused variable warning
         self.game_over = False
+
+        self.robots_rfid_status = RfidStatusArray()
+        self.red_resources = 1000  # 初始化红方资源
+        self.blue_resources = 1000  # 初始化蓝方资源
+        print('裁判系统初始化完成')
+
+    def handle_exchange_ammo(self, request, response):
+        # 判断是哪个阵营的机器人发出的请求
+        if "red" in request.robot_name:
+            resources = self.red_resources
+        elif "blue" in request.robot_name:
+            resources = self.blue_resources
+        else:
+            response.success = False
+            response.message = "Invalid robot name"
+            return response
+        print('接收到弹丸兑换请求')
+        # 检查是否有足够的资源来满足请求
+        if request.ammo_amount > 0 and request.ammo_amount <= resources:
+            resources -= request.ammo_amount
+            response.success = True
+            response.message = "Ammo exchanged successfully"
+            print('弹丸兑换成功')
+            # 增加弹丸上限
+            if request.robot_name in self.robots.keys():
+                self.robots[request.robot_name].supply_projectile(request.ammo_amount)
+        else:
+            response.success = False
+            response.message = "Not enough resources, resources left: " + str(resources)
+            print('弹丸兑换失败')
+        return response
+    
+    def rfid_status_callback(self, message):
+        self.robots_rfid_status = message
 
     def attack_info_callback(self, msg: String):
         if self.game_over:
@@ -202,9 +245,6 @@ class SimpleRefereeSystem():
         # publish robot status
         for robot in self.robots.values():
             robot.publish_status()
-
-    def referee_rfid_info_callback(self, msg: RfidStatusArray):
-        self.rfid_status = msg.rfid_status
 
     def referee_cmd_callback(self, msg: RefereeCmd):
         if msg.cmd == msg.PREPARATION:

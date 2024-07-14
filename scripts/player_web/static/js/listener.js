@@ -13,16 +13,8 @@ function fullscreenChange(e, game_container) {
 			elem.mozRequestPointerLock ||
 			elem.webkitRequestPointerLock;
 			
-		// 非补给状态时开启鼠标锁定
-		if (window.supplyStatus !== 'active')
-			elem.requestPointerLock();
-		else {
-			// 关闭鼠标锁定
-			elem.exitPointerLock = elem.exitPointerLock ||
-			elem.mozExitPointerLock ||
-			elem.webkitExitPointerLock;
-			elem.exitPointerLock();
-		}
+		
+		elem.requestPointerLock();
 		
 		// 开启案件监听
 		$(document).keydown(function(event) {
@@ -37,22 +29,21 @@ function fullscreenChange(e, game_container) {
 
 		// 开启获取图像
 		start_socket_transfer()
-		if (window.supplyStatus !== 'active'){
-			// 开启鼠标监听
-			document.addEventListener("mousemove", mouseListener);
-			$(document).mousedown(function(e){
-					if(1 == e.which){
-						// console.log("你点击了鼠标左键");
-						mouse_down_controller()
-					}
-				});
-			$(document).mouseup(function(e){
-					if(1 == e.which){
-						// console.log("你松开了了鼠标左键");
-						mouse_up_controller()
-					}
-				});
-		}
+
+		// 开启鼠标监听
+		document.addEventListener("mousemove", mouseListener);
+		$(document).mousedown(function(e){
+				if(1 == e.which){
+					// console.log("你点击了鼠标左键");
+					mouse_down_controller()
+				}
+			});
+		$(document).mouseup(function(e){
+				if(1 == e.which){
+					// console.log("你松开了了鼠标左键");
+					mouse_up_controller()
+				}
+			});
 		
 
 		
