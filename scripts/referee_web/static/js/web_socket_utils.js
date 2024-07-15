@@ -95,11 +95,19 @@ function init_socket() {
         }
 
     });
+    socket.on('timer_info', function(data) {
+        console.log("timer_info", data);
+        let minutes = Math.floor(data.time / 60);
+        let seconds = Math.floor(data.time % 60);
+        document.getElementById('timer_display').innerText = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+    });
     socket.on('disconnect', function () {
         console.log('disconnect')
     });
 
 }
+
+
 
 function revive(rob_name){
     let map = {

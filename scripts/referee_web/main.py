@@ -25,6 +25,7 @@ import base64
 import numpy as np
 from std_msgs.msg import Int32
 from rmoss_interfaces.msg import RefereeCmd,RobotStatus
+import threading
 import time
 
 # ==========================================
@@ -62,6 +63,33 @@ log.setLevel(logging.ERROR)
 
 # =====================================================================  Classes   ==========================================
 
+class Timer:
+    def __init__(self):
+        self.start_time = None
+        self.elapsed_time = 0
+        self.running = False
+
+    def start(self):
+        if not self.running:
+            self.start_time = time.time() - self.elapsed_time
+            self.running = True
+
+    def stop(self):
+        if self.running:
+            self.elapsed_time = time.time() - self.start_time
+            self.running = False
+
+    def reset(self):
+        self.start_time = None
+        self.elapsed_time = 0
+        self.running = False
+
+    def get_time(self):
+        if self.running:
+            return time.time() - self.start_time
+        else:
+            return self.elapsed_time
+        
 # ==========================================
 #    namespace class
 # ==========================================
@@ -70,6 +98,10 @@ class RefereeSocketHandler(Namespace):
         super().__init__(namespace=namespace)
         self.robot_name = namespace[1:]
         self.info_thread = None
+
+        self.timer = Timer()
+        self.timer_thread = threading.Thread(target=self.send_timer_info)
+        self.timer_thread.start()
 
         # ==========================================
         #   pubs
@@ -89,13 +121,20 @@ class RefereeSocketHandler(Namespace):
         
         robot_name = message.get('robot_name','')
         instruction = message['instruction']
+        if instruction == 'START_GAME':
+            print("start game timer")
+            self.timer.start()
+        elif instruction == 'STOP_GAME':
+            print("stop game timer")
+            self.timer.stop()
+        elif instruction == 'SELF_CHECKING':
+            print("reset game timer")
+            self.timer.reset()
         cmd = control_map[instruction]
         msg = RefereeCmd()
         msg.cmd = cmd
         msg.robot_name = robot_name
         self.referee_pub.publish(msg)
-        
-        
 
     def on_default_error_handler(self, e):
         print("======================= ERROR =======================")
@@ -103,6 +142,12 @@ class RefereeSocketHandler(Namespace):
         print(request.event["message"])
         print(request.event["args"])
         print("=====================================================")
+
+    def send_timer_info(self):
+        while True:
+            time.sleep(1)
+            if self.timer.running:
+                socketio.emit('timer_info', {'time': self.timer.get_time()})
     
 
 # =============================================================================================================================

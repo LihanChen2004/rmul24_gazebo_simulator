@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import time
+import threading
 import rclpy
 from rclpy.node import Node
 
@@ -32,6 +33,32 @@ def parse_attack_info(attack_str):
         return None
     return shooter_model_name, shooter_name, target_model_name, target_link_name
 
+class GameTimer:
+    def __init__(self):
+        self.start_time = None
+        self.elapsed_time = 0
+        self.running = False
+
+    def start(self):
+        if not self.running:
+            self.start_time = time.time() - self.elapsed_time
+            self.running = True
+
+    def stop(self):
+        if self.running:
+            self.elapsed_time = time.time() - self.start_time
+            self.running = False
+
+    def reset(self):
+        self.start_time = None
+        self.elapsed_time = 0
+        self.running = False
+
+    def get_time(self):
+        if self.running:
+            return time.time() - self.start_time
+        else:
+            return self.elapsed_time
 class StandardRobot:
     def __init__(self,node,robot_name):
         self.node = node
@@ -101,14 +128,15 @@ class SimpleRefereeSystem():
         self.node = node
         self.node.declare_parameter('max_hp', 500)
         self.node.declare_parameter('initial_projectiles', 100)
+        self.referee_game_time = None
+        self.last_time = None
+        self.timer = GameTimer()
         # ==========================================
         #   srv
         # ==========================================
         self.exchange_ammo_srv = node.create_service(ExchangeAmmon, 
                                                      '/exchange_ammo', 
                                                      self.handle_exchange_ammo)
-
-
         # ==========================================
         #   subs
         # ==========================================
@@ -226,6 +254,13 @@ class SimpleRefereeSystem():
     def timer_cb(self):
         if self.game_over:
             return
+        print(self.timer.get_time())
+        if self.timer.get_time() % 30 <0.5 and self.timer.get_time() > 29:
+            self.last_time = self.timer.get_time()
+            self.red_resources += 50
+            self.blue_resources += 50
+            print('资源增加红方：',self.red_resources)
+            print('资源增加蓝方：',self.blue_resources)
         # check survive
         for robot in self.robots.values():
             if robot.survive and robot.remain_hp == 0:
@@ -266,15 +301,21 @@ class SimpleRefereeSystem():
                 robot.reset_data()
                 robot.enable_power(True)
                 robot.enable_control(False)
+            print("reset game timer")
+            self.timer.reset()
         elif msg.cmd == msg.START_GAME:
             self.game_over = False
             for robot in self.robots.values():
                 robot.enable_power(True)
                 robot.enable_control(True)
+            print("start game timer")
+            self.timer.start()
         elif msg.cmd == msg.STOP_GAME:
             self.game_over = True
             for robot in self.robots.values():
                 robot.enable_power(False)
+            print("stop game timer")
+            self.timer.stop()
         elif msg.cmd == msg.KILL_ROBOT:
             if msg.robot_name in self.robots.keys():
                 robot = self.robots[msg.robot_name]
