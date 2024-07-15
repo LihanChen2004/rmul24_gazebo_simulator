@@ -128,6 +128,7 @@ class SimpleRefereeSystem():
         self.node = node
         self.node.declare_parameter('max_hp', 500)
         self.node.declare_parameter('initial_projectiles', 100)
+        self.node.declare_parameter('initial_resources', 200)
         self.referee_game_time = None
         self.last_time = None
         self.timer = GameTimer()
@@ -178,8 +179,9 @@ class SimpleRefereeSystem():
         self.game_over = False
 
         self.robots_rfid_status = RfidStatusArray()
-        self.red_resources = 1000  # 初始化红方资源
-        self.blue_resources = 1000  # 初始化蓝方资源
+        self.initial_resources = self.node.get_parameter("initial_resources").get_parameter_value().integer_value
+        self.red_resources = self.initial_resources
+        self.blue_resources = self.initial_resources
         print('裁判系统初始化完成')
 
     def handle_exchange_ammo(self, request, response):
@@ -254,7 +256,7 @@ class SimpleRefereeSystem():
     def timer_cb(self):
         if self.game_over:
             return
-        print(self.timer.get_time())
+        # print(self.timer.get_time())
         if self.timer.get_time() % 30 <0.5 and self.timer.get_time() > 29:
             self.last_time = self.timer.get_time()
             self.red_resources += 50
@@ -297,6 +299,8 @@ class SimpleRefereeSystem():
                 robot.enable_power(True)
         elif msg.cmd == msg.SELF_CHECKING:
             self.game_over = False
+            self.red_resources = self.initial_resources
+            self.blue_resources = self.initial_resources
             for robot in self.robots.values():
                 robot.reset_data()
                 robot.enable_power(True)

@@ -2,3 +2,4 @@
   ros__parameters:
     max_hp: 500
     initial_projectiles: 100
+    initial_resources: 200
