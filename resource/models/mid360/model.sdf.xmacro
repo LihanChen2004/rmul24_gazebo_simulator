@@ -32,6 +32,7 @@
       </sensor>
 
       <sensor name="${prefix}mid360_lidar" type="gpu_lidar">
+        <ignition_frame_id>${prefix}mid360</ignition_frame_id>
         <pose>0 0 0.03 0 0 0</pose>
         <always_on>true</always_on>
         <visualize>true</visualize>

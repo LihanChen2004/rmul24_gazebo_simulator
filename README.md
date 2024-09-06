@@ -90,8 +90,6 @@ pip install xmacro
 
 - [x] TF Tree 都加上命名空间
 
-- [x] 删除 ignition plugin 中的 `ignition_frame_id`
-
 - [ ] launch 中分离世界生成和机器人生成
 
 ## 配套导航仿真仓库

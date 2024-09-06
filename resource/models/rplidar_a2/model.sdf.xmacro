@@ -21,8 +21,7 @@
                 <xmacro_block name="geometry_cylinder" r="0.04" l="0.04"/>
             </collision>
             <sensor name="${prefix}rplidar_a2" type="gpu_lidar">
-                <!-- TODO: remove ignition_frame_id -->
-                <ignition_frame_id>front_rplidar_a2</ignition_frame_id>
+                <ignition_frame_id>${prefix}rplidar_a2</ignition_frame_id>
                 <pose>0 0 0.03 0 0 0</pose>
                 <always_on>true</always_on>
                 <visualize>${visualize}</visualize>
