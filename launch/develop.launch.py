@@ -45,6 +45,14 @@ def generate_launch_description():
         pkg_rmul24_gazebo_simulator, "config", "referee_system_1v1.yaml"
     )
 
+    # Map fully qualified names to relative ones so the node's namespace can be prepended.
+    # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
+    # https://github.com/ros/geometry2/issues/32
+    # https://github.com/ros/robot_state_publisher/pull/30
+    # TODO(orduno) Substitute with `PushNodeRemapping`
+    #              https://github.com/ros2/launch_ros/issues/56
+    remappings = [("/tf", "tf"), ("/tf_static", "tf_static")]
+
     robots = [
         {
             "name": "red_standard_robot1",
@@ -157,19 +165,14 @@ def generate_launch_description():
         robot_state_publisher = Node(
             package="robot_state_publisher",
             executable="robot_state_publisher",
-            name="robot_state_publisher",
+            namespace=robot["name"],
             parameters=[
                 {
                     "robot_description": robot_urdf_xml,
                     "publish_frequency": 20.0,
                 }
             ],
-            remappings=[
-                ("/robot_description", f"{robot['name']}/robot_description"),
-                ("/joint_states", f"{robot['name']}/joint_state"),
-                ("/tf", f"{robot['name']}/tf"),
-                ("/tf_static", f"{robot['name']}/tf_static"),
-            ],
+            remappings=remappings,
         )
         ld.add_action(robot_state_publisher)
 
