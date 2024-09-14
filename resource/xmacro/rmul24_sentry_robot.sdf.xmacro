@@ -17,7 +17,7 @@
         <!--rplidar a2-->
         <xmacro_block name="rplidar_a2" prefix="front_" parent="chassis" pose="0.155 0 0.1 0 0 0" update_rate="10" samples="400" visualize="true"/>
         <!--livox-->
-        <xmacro_block name="livox" prefix="right_" parent="gimbal_yaw" pose="0 -0.12 0.25 0 0 0" update_rate="10" samples="1500"/>
+        <xmacro_block name="livox" prefix="right_" parent="gimbal_yaw" pose="0 -0.12 0.25 0 0 0" update_rate="10" samples="1875"/>
         <!--industrial camera-->
         <xmacro_block name="industrial_camera" prefix="front_" parent="gimbal_pitch" pose="0.1 0 0.045 0 0 0" update_rate="30" horizontal_fov="1" width="1280" height="720"/>
 
