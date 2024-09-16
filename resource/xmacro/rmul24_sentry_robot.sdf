@@ -292,8 +292,6 @@
 				<xyz>0 0 1</xyz>
 				<limit>
 					<effort>100</effort>
-					<lower>-1.57</lower>
-					<upper>1.57</upper>
 					<velocity>50</velocity>
 				</limit>
 			</axis>
@@ -497,7 +495,7 @@
 					<specular>0.1 0.1 0.1</specular>
 					<pbr>
 						<metal>
-							<albedo_map>model://rm21_armor_module/materials/textures/small_num1.png</albedo_map>
+							<albedo_map>model://rm21_armor_module/materials/textures/small_num3.png</albedo_map>
 						</metal>
 					</pbr>
 				</material>
@@ -630,7 +628,7 @@
 					<specular>0.1 0.1 0.1</specular>
 					<pbr>
 						<metal>
-							<albedo_map>model://rm21_armor_module/materials/textures/small_num1.png</albedo_map>
+							<albedo_map>model://rm21_armor_module/materials/textures/small_num3.png</albedo_map>
 						</metal>
 					</pbr>
 				</material>
@@ -763,7 +761,7 @@
 					<specular>0.1 0.1 0.1</specular>
 					<pbr>
 						<metal>
-							<albedo_map>model://rm21_armor_module/materials/textures/small_num1.png</albedo_map>
+							<albedo_map>model://rm21_armor_module/materials/textures/small_num3.png</albedo_map>
 						</metal>
 					</pbr>
 				</material>
@@ -896,7 +894,7 @@
 					<specular>0.1 0.1 0.1</specular>
 					<pbr>
 						<metal>
-							<albedo_map>model://rm21_armor_module/materials/textures/small_num1.png</albedo_map>
+							<albedo_map>model://rm21_armor_module/materials/textures/small_num3.png</albedo_map>
 						</metal>
 					</pbr>
 				</material>

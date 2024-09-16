@@ -5,7 +5,7 @@
   direction: "GZ_TO_ROS"
 
 # mecanum plugin odometry
-- ros_topic_name: "/<robot_name>/odometry"
+- ros_topic_name: "/<robot_name>/chassis_odometry_gt"
   gz_topic_name: "/<robot_name>/odometry"
   ros_type_name: "nav_msgs/msg/Odometry"
   gz_type_name: "ignition.msgs.Odometry"
