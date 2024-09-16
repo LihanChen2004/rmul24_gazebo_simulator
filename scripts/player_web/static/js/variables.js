@@ -27,6 +27,7 @@ var active_map = {
 	"e":false,
 	"o":false,
 	"shoot":false,
+	"autoAim":false,
 	"reset":false,
 	"movementX":0,
 	"movementY":0

@@ -8,7 +8,7 @@
     <xmacro_include uri="model://rmua19_standard_robot/rmua19_standard_robot.def.xmacro" />
     <!--property defination-->
     <xmacro_define_value name="global_initial_color" value="none" />
-    <xmacro_define_value name="global_armor_sticker_type" value="num1" />
+    <xmacro_define_value name="global_armor_sticker_type" value="num3" />
     <!--rmul24_sentry_robot model-->
     <model name="rmul24_sentry_robot">
 

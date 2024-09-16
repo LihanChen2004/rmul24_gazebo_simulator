@@ -17,6 +17,7 @@ import threading
 #   packages for ros
 # ==========================================
 import rclpy
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 import sys
 from sensor_msgs.msg import Image
 import cv2
@@ -30,7 +31,9 @@ from rmoss_interfaces.msg import RobotStatus
 from rmoss_interfaces.msg import RfidStatusArray
 from rmoss_interfaces.msg import RfidStatus
 from rmoss_interfaces.srv import ExchangeAmmon
+from vision_interfaces.msg import AutoAim
 import time
+
 
 # ==========================================
 #    ros functions
@@ -91,6 +94,7 @@ class RobotSocketHandler(Namespace):
         self.pitch_upper_bound = 1.1
         self.pitch_lower_bound = -0.9
         self.rfid_status=RfidStatus()
+        self.auto_aim_cmd=AutoAim()
         self.rfid_status.robot_name=self.robot_name
         self.supply_active=False
 
@@ -106,11 +110,23 @@ class RobotSocketHandler(Namespace):
         self.chassis_cmd_pub = node.create_publisher(ChassisCmd, '/%s/robot_base/chassis_cmd' % (robot_name), 10)
         self.gimbal_cmd_pub = node.create_publisher(GimbalCmd, '/%s/robot_base/gimbal_cmd' % (robot_name), 10)
         self.shoot_cmd_pub = node.create_publisher(ShootCmd, '/%s/robot_base/shoot_cmd' % (robot_name), 10)
-
         # ==========================================
         #   subs
         # ==========================================
-        self.rfid_status_sub = node.create_subscription(RfidStatusArray, '/referee_system/ign/rfid_info', self.rfid_status_callback, 10)
+        qos_profile = QoSProfile(depth=10)
+        qos_profile.reliability = QoSReliabilityPolicy.BEST_EFFORT
+        self.rfid_status_sub = node.create_subscription(
+            RfidStatusArray,
+            '/referee_system/ign/rfid_info',
+            self.rfid_status_callback,
+            10
+        )
+        self.auto_aim_cmd_sub = node.create_subscription(
+            AutoAim,
+            '/%s/auto_aim_cmd' % (robot_name),
+            self.auto_aim_callback,
+            qos_profile
+        )
 
     def rfid_status_callback(self, message):
         for status in message.robot_rfid_status:
@@ -123,6 +139,9 @@ class RobotSocketHandler(Namespace):
                     self.rfid_status.center_area_is_triggered=True
                 else:
                     self.rfid_status.center_area_is_triggered=False
+    
+    def auto_aim_callback(self, message):
+        self.auto_aim_cmd = message
 
     def on_exchange(self, message):
         ammo_request = message.get('ammo_request', 0)
@@ -154,7 +173,8 @@ class RobotSocketHandler(Namespace):
     def on_control(self, message):
         chassis_x = 0.0
         chassis_y = 0.0
-        shoot = False 
+        shoot = False
+        autoAim = False 
         if message['w']:
             chassis_x = chassis_x + 1*self.speed
         if message['s']:
@@ -169,18 +189,47 @@ class RobotSocketHandler(Namespace):
             self.speed = max((self.speed - 1), 1.0)
         if message['shoot']:
             shoot = True
+        if message['autoAim']:
+            autoAim = True
         if message['o']:
             if self.rfid_status.supplier_area_is_triggered == True:
                 self.supply_active=True
                 emit('supply', {'value': 'active'}, namespace='/'+self.robot_name)
         movement_yaw = message['movementX']
         movement_pitch = message['movementY']
-        if movement_pitch<=0:
-            self.gimbal_pitch = max(self.gimbal_pitch + movement_pitch, self.pitch_lower_bound)
+
+        # ==========================================
+        #   自瞄控制设置和限制yaw和pitch的范围
+        # ==========================================
+        if autoAim and self.auto_aim_cmd.tracking:
+            # self.gimbal_pitch = max(self.auto_aim_cmd.aim_pitch, self.pitch_lower_bound)
+            # if self.auto_aim_cmd.aim_pitch < self.pitch_lower_bound:
+            #     self.gimbal_pitch = self.pitch_lower_bound
+            # elif self.auto_aim_cmd.aim_pitch > self.pitch_upper_bound:
+            #     self.gimbal_pitch = self.pitch_upper_bound
+            # else:
+            #     self.gimbal_pitch = self.auto_aim_cmd.aim_pitch
+            # shoot = False
+            movement_pitch = self.auto_aim_cmd.aim_pitch
+            movement_yaw = self.auto_aim_cmd.aim_yaw
+            if self.auto_aim_cmd.fire:
+                shoot = True 
         else:
-            self.gimbal_pitch = min(self.gimbal_pitch + movement_pitch, self.pitch_upper_bound)
+            if movement_pitch <= 0:            
+                self.gimbal_pitch = max(self.gimbal_pitch + movement_pitch, self.pitch_lower_bound)
+            else:
+                self.gimbal_pitch = min(self.gimbal_pitch + movement_pitch, self.pitch_upper_bound)
+        
+        # if autoAim:
+        #     self.gimbal_yaw = self.auto_aim_cmd.aim_yaw
+        # else:
+        #     self.gimbal_yaw = self.gimbal_yaw + movement_yaw
         self.gimbal_yaw = self.gimbal_yaw + movement_yaw
-        send_instruction(chassis_x, chassis_y, self.gimbal_pitch, self.gimbal_yaw, shoot,self.shoot_cmd_pub, self.chassis_cmd_pub, self.gimbal_cmd_pub)
+
+        # ==========================================
+        #   发送指令
+        # ==========================================
+        send_instruction(chassis_x, chassis_y, self.gimbal_pitch, self.gimbal_yaw, shoot, autoAim, self.shoot_cmd_pub, self.chassis_cmd_pub, self.gimbal_cmd_pub)
 
     def on_default_error_handler(self, e):
         print("======================= ERROR =======================")
@@ -230,7 +279,7 @@ class BaseSocketHandler(Namespace):
 # ==========================================
 #    发送控制指令
 # ==========================================
-def send_instruction(chassis_x, chassis_y, gimbal_pitch, gimbal_yaw, shoot, shoot_cmd_pub, chassis_cmd_pub, gimbal_cmd_pub):
+def send_instruction(chassis_x, chassis_y, gimbal_pitch, gimbal_yaw, shoot, autoAim, shoot_cmd_pub, chassis_cmd_pub, gimbal_cmd_pub):
     if shoot:
         publish_shoot_cmd_msg(shoot_cmd_pub, 1, 20.0)
     publish_chassis_cmd_msg(chassis_cmd_pub, chassis_x, chassis_y, 0.0)

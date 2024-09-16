@@ -24,6 +24,7 @@
 	<depend>rmoss_gz_plugins</depend>
 	<depend>rmoss_gz_resources</depend>
 	<depend>sdformat_tools</depend>
+	<depend>vision_interfaces</depend>
 
 	<test_depend>ament_cmake_gtest</test_depend>
 	<test_depend>ament_lint_auto</test_depend>

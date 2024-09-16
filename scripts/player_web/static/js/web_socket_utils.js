@@ -121,11 +121,19 @@ function start_socket_transfer() {
                     // console.log("你点击了鼠标左键");
                     mouse_down_controller()
                 }
+                if (3 == e.which) {
+                    // console.log("你点击了鼠标右键");
+                    right_mouse_down_controller()
+                }
             });
         $(document).mouseup(function(e){
                 if(1 == e.which){
                     // console.log("你松开了了鼠标左键");
                     mouse_up_controller()
+                }
+                if (3 == e.which) {
+                    // console.log("你点击了鼠标右键");
+                    right_mouse_up_controller()
                 }
             });
         console.log('cancel exchange');
@@ -152,11 +160,19 @@ function start_socket_transfer() {
                     // console.log("你点击了鼠标左键");
                     mouse_down_controller()
                 }
+                if (3 == e.which) {
+                    // console.log("你点击了鼠标右键");
+                    right_mouse_down_controller()
+                }
             });
         $(document).mouseup(function(e){
                 if(1 == e.which){
                     // console.log("你松开了了鼠标左键");
                     mouse_up_controller()
+                }
+                if (3 == e.which) {
+                    // console.log("你点击了鼠标右键");
+                    right_mouse_up_controller()
                 }
             });
         console.log('exchange amount', ammoAmount);
