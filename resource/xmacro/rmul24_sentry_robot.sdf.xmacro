@@ -19,7 +19,7 @@
         <!--livox-->
         <xmacro_block name="livox" prefix="right_" parent="gimbal_yaw" pose="0 -0.12 0.25 0 0 0" update_rate="10" samples="1875"/>
         <!--industrial camera-->
-        <xmacro_block name="industrial_camera" prefix="front_" parent="gimbal_pitch" pose="0.1 0 0.045 0 0 0" update_rate="30" horizontal_fov="1" width="1280" height="720"/>
+        <xmacro_block name="industrial_camera" prefix="front_" parent="gimbal_pitch" pose="0.1 0 0.045 0 0 0" update_rate="30" horizontal_fov="1" width="1920" height="1080"/>
 
         <!--plugins-->
         <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems -->
