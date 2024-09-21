@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
-  <model name='RMUL_2024'>
+  <model name='rmul_2024'>
     <link name='body'>
       <inertial>
         <mass>2</mass>
@@ -21,7 +21,7 @@
       <visual name='visual'>
         <geometry>
           <mesh>
-            <uri>model://RMUL_2024/meshes/RMUL_2024.stl</uri>
+            <uri>model://rmul_2024/meshes/rmul_2024.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
@@ -48,7 +48,7 @@
         <max_contacts>10</max_contacts>
         <geometry>
           <mesh>
-            <uri>model://RMUL_2024/meshes/RMUL_2024.stl</uri>
+            <uri>model://rmul_2024/meshes/rmul_2024.stl</uri>
             <scale>0.001 0.001 0.001</scale>
           </mesh>
         </geometry>
