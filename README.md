@@ -33,7 +33,7 @@ rmul24_gazebo_simulator 是基于 Gazebo (Ignition 字母版本) 的仿真环境
 - Ignition: [Fortress](https://gazebosim.org/docs/fortress/install_ubuntu/)
 
 ```sh
-cd ros_ws/src
+cd ~/ros_ws/src
 
 git clone https://github.com/LihanChen2004/rmoss_interfaces.git
 git clone https://github.com/LihanChen2004/rmoss_core.git
@@ -43,6 +43,11 @@ git clone https://github.com/gezp/sdformat_tools.git
 git clone https://github.com/LihanChen2004/rmul24_gazebo_simulator.git
 
 pip install xmacro
+```
+
+```sh
+cd ..
+colcon build --symlink-install -DCMAKE_BUILD_TYPE=Release
 ```
 
 ### 1.2 启动仿真环境
@@ -97,6 +102,10 @@ pip install xmacro
     ```sh
     python3 src/rmul24_gazebo_simulator/scripts/referee_web/main.py
     ```
+
+### 1.3 切换仿真世界
+
+修改 [gz_world.yaml](./config/gz_world.yaml) 中的 `world`。当前可选: `rmul_2024`, `rmuc_2024`
 
 ## 配套导航仿真仓库
 
