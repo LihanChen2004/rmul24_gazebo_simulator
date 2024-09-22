@@ -4,7 +4,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import ExecuteProcess
-from launch.substitutions import LaunchConfiguration
 from nav2_common.launch import ReplaceString
 from xmacro.xmacro4sdf import XMLMacro4sdf
 from sdformat_tools.urdf_generator import UrdfGenerator
@@ -20,18 +19,18 @@ def generate_launch_description():
     remappings = [("/tf", "tf"), ("/tf_static", "tf_static")]
 
     pkg_simulator = get_package_share_directory("rmul24_gazebo_simulator")
-
-    # Load robot configurations
-    robots_init_pose_path = os.path.join(pkg_simulator, "config", "robots_init_pose.yaml")
     robot_xmacro_path = os.path.join(pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf.xmacro")
     robot_sdf_path = os.path.join(pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf")
     bridge_config = os.path.join(pkg_simulator, "config", "ros_gz_bridge.yaml")
     robot_config = os.path.join(pkg_simulator, "config", "base_params.yaml")
 
-    with open(robots_init_pose_path, "r") as file:
-        robots = yaml.safe_load(file)["robots"]
+    # Get spawn robot init pose
+    gz_world_path = os.path.join(pkg_simulator, "config", "gz_world.yaml")
+    with open(gz_world_path, 'r') as file:
+        config = yaml.safe_load(file)
+        selected_world = config.get("world")
+        robots = config["robots"].get(selected_world)
 
-    # Create XMLMacro and URDFGenerator
     robot_macro = XMLMacro4sdf()
     robot_macro.set_xml_file(robot_xmacro_path)
     urdf_generator = UrdfGenerator()
