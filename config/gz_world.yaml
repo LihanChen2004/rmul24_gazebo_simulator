@@ -1,4 +1,4 @@
-world: "rmul_2024"
+world: "rmuc_2024"
 
 robots:
 
@@ -12,8 +12,8 @@ robots:
 
     - name: "blue_standard_robot1"
       color: "blue"
-      x_pose: "10.0"
-      y_pose: "4.5"
+      x_pose: "10.4"
+      y_pose: "4.35"
       z_pose: "1.2"
       yaw: "3.14"
 

@@ -1,7 +1,5 @@
 # rmul24_gazebo_simulator
 
-[![State-of-the-art Shitcode](https://img.shields.io/static/v1?label=State-of-the-art&message=Shitcode&color=7B5804)](https://github.com/trekhleb/state-of-the-art-shitcode)
-
 > **仍在开发中，更新频率较快且不稳定，不考虑向前兼容。请谨慎使用**
 
 ## 简介
@@ -12,17 +10,13 @@ rmul24_gazebo_simulator 是基于 Gazebo (Ignition 字母版本) 的仿真环境
 
 在 rmua19 标准机器人（rmua19_standard_robot）上增加相关传感器，构建不同机器人模型:
 
-- rmua19_standard_robot_a：搭载云台相机 industrial_camera 和搭载激光雷达 rplidar_a2，其中相机放置有在 yaw 轴。
-
-- rmua19_standard_robot_b：搭载云台相机 industrial_camera 和搭载激光雷达 rplidar_a2，其中相机放置有在 pitch 轴。
-
 - rmul24_sentry_robot：搭载云台相机 industrial_camera 和搭载激光雷达 rplidar_a2 和 Livox mid360，其中相机放置有在 pitch 轴
-
-构建 RoboMaster University League 2024 简易场地 (models/rmul_2024):
 
 - 在 world 中使用 [PerformerDetector](https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/performer_detector/PerformerDetector.hh) 插件实现区域 RFID 检测。仍在开发与裁判系统对接中
 
-构建 RoboMaster University Championship 2024 简易场地 (models/rmuc_2024)
+| rmul_2024 | rmuc_2024 |
+|:-----------------:|:--------------:|
+|![spin_nav.gif](https://raw.githubusercontent.com/LihanChen2004/picx-images-hosting/master/spin_nav.1ove3nw63o.gif)|![rmuc_fly.gif](https://raw.githubusercontent.com/LihanChen2004/picx-images-hosting/master/rmuc_fly_image.1aoyoashvj.gif)|
 
 ## 一. 基本使用
 
@@ -109,17 +103,11 @@ colcon build --symlink-install -DCMAKE_BUILD_TYPE=Release
 
 ## 配套导航仿真仓库
 
-- 与 CMU 导航框架结合使用
+- 2025 SMBU PolarBear Sentry Navigation
 
-    [pb_cmu_navigation](https://github.com/LihanChen2004/pb_cmu_navigation)
+    [pb2025_sentry_nav](https://github.com/LihanChen2004/pb2025_sentry_nav.git)
 
     ![cmu_nav_v1_0](https://raw.githubusercontent.com/LihanChen2004/picx-images-hosting/master/spin_nav.1ove3nw63o.gif)
-
-- 与 navigation2 导航框架结合使用【停止维护】
-
-    [rm_nav_bringup](https://github.com/LihanChen2004/rm_nav_bringup)
-
-    ![nav_v1_0](https://raw.githubusercontent.com/LihanChen2004/rm_nav_bringup/main/.docs/nav_v1_0.gif)
 
 ## 维护者及开源许可证
 
