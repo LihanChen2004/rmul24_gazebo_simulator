@@ -197,10 +197,12 @@ class RobotSocketHandler(Namespace):
                 emit('supply', {'value': 'active'}, namespace='/'+self.robot_name)
         movement_yaw = message['movementX']
         movement_pitch = message['movementY']
-
+        # print('movement_yaw:', movement_yaw)
+        # print('movement_pitch:', movement_pitch)
         # ==========================================
         #   自瞄控制设置和限制yaw和pitch的范围
         # ==========================================
+        print("self.gimbal_yaw: ",self.gimbal_yaw)
         if autoAim and self.auto_aim_cmd.tracking:
             # self.gimbal_pitch = max(self.auto_aim_cmd.aim_pitch, self.pitch_lower_bound)
             # if self.auto_aim_cmd.aim_pitch < self.pitch_lower_bound:
@@ -210,10 +212,13 @@ class RobotSocketHandler(Namespace):
             # else:
             #     self.gimbal_pitch = self.auto_aim_cmd.aim_pitch
             # shoot = False
-            movement_pitch = self.auto_aim_cmd.aim_pitch
-            movement_yaw = self.auto_aim_cmd.aim_yaw
+            movement_pitch = -self.auto_aim_cmd.aim_pitch*0.001
+            movement_yaw = -self.auto_aim_cmd.aim_yaw*0.001
             if self.auto_aim_cmd.fire:
                 shoot = True 
+        elif autoAim and not self.auto_aim_cmd.tracking:
+            movement_pitch = 0
+            movement_yaw = 0
         else:
             if movement_pitch <= 0:            
                 self.gimbal_pitch = max(self.gimbal_pitch + movement_pitch, self.pitch_lower_bound)
