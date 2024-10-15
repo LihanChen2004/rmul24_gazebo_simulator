@@ -1,0 +1,33 @@
+world: "rmuc_2024"
+
+robots:
+
+  rmul_2024:
+    - name: "red_standard_robot1"
+      color: "red"
+      x_pose: "4.3"
+      y_pose: "3.35"
+      z_pose: "1.2"
+      yaw: "0.0"
+
+    - name: "blue_standard_robot1"
+      color: "blue"
+      x_pose: "10.4"
+      y_pose: "4.35"
+      z_pose: "1.2"
+      yaw: "3.14"
+
+  rmuc_2024:
+    - name: "red_standard_robot1"
+      color: "red"
+      x_pose: "6.35"
+      y_pose: "7.6"
+      z_pose: "0.2"
+      yaw: "0.0"
+
+    - name: "blue_standard_robot1"
+      color: "blue"
+      x_pose: "22.8"
+      y_pose: "7.6"
+      z_pose: "0.2"
+      yaw: "3.14"

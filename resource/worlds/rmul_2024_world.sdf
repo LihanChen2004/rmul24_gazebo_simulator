@@ -21,9 +21,9 @@
     <plugin filename="libignition-gazebo-imu-system.so" name="ignition::gazebo::systems::Imu">
     </plugin>
 
-    <light type='directional' name='sun'>
+    <light type='directional' name='direct_light'>
       <cast_shadows>true</cast_shadows>
-      <pose>0 0 10 0 0 0</pose>
+      <pose>7.4 3.6 10 0 0 0</pose>
       <diffuse>1.0 1.0 1.0 1</diffuse>
       <specular>0.5 0.5 0.5 1</specular>
       <attenuation>
@@ -32,26 +32,12 @@
         <linear>0.01</linear>
         <quadratic>0.001</quadratic>
       </attenuation>
-      <direction>-0.5 0.1 -0.9</direction>
+      <direction>0 0 -1</direction>
     </light>
 
-    <light type='directional' name='sun2'>
-      <cast_shadows>true</cast_shadows>
-      <pose>0 0 -10 0 0 0</pose>
-      <diffuse>1.0 1.0 1.0 1</diffuse>
-      <specular>0.5 0.5 0.5 1</specular>
-      <attenuation>
-        <range>1000</range>
-        <constant>0.9</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <direction>-0.5 0.1 -0.9</direction>
-    </light>
-
-    <model name='RMUL_2024'>
+    <model name='rmul_2024'>
       <include>
-        <uri>model://RMUL_2024</uri>
+        <uri>model://rmul_2024</uri>
       </include>
       <pose>0.0 0.0 0 0 0 0</pose>
       <static>true</static>
@@ -78,7 +64,7 @@
       </link>
       <!-- https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/performer_detector/PerformerDetector.hh -->
       <plugin filename="ignition-gazebo-performer-detector-system" name="gz::sim::systems::PerformerDetector">
-        <topic>/model/red_supplier/performer_detector/status</topic>
+        <!-- <topic>/model/red_supplier/performer_detector/status</topic> -->
         <geometry>
           <box>
             <size>0 0 0</size>
