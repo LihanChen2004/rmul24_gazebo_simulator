@@ -75,7 +75,10 @@ def generate_launch_description():
             executable="robot_state_publisher",
             namespace=robot["name"],
             remappings=remappings,
-            parameters=[{"robot_description": robot_urdf_xml}],
+            parameters=[{
+                "use_sim_time": True,
+                "robot_description": robot_urdf_xml,
+            }],
         )
 
         robot_ign_bridge = Node(
