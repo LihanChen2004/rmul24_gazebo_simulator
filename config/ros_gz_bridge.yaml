@@ -1,9 +1,3 @@
-- ros_topic_name: "/<robot_name>/clock"
-  gz_topic_name: "/clock"
-  ros_type_name: "rosgraph_msgs/msg/Clock"
-  gz_type_name: "ignition.msgs.Clock"
-  direction: "GZ_TO_ROS"
-
 # mecanum plugin odometry
 - ros_topic_name: "/<robot_name>/chassis_odometry_gt"
   gz_topic_name: "/<robot_name>/odometry"
