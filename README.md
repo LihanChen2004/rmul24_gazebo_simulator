@@ -41,7 +41,7 @@ pip install xmacro
 
 ```sh
 cd ..
-colcon build --symlink-install -DCMAKE_BUILD_TYPE=Release
+colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 ```
 
 ### 1.2 启动仿真环境
