@@ -195,14 +195,27 @@ class RobotSocketHandler(Namespace):
             if self.rfid_status.supplier_area_is_triggered == True:
                 self.supply_active=True
                 emit('supply', {'value': 'active'}, namespace='/'+self.robot_name)
-        movement_yaw = message['movementX']
-        movement_pitch = message['movementY']
-        # print('movement_yaw:', movement_yaw)
-        # print('movement_pitch:', movement_pitch)
+        print("message['movementX']:",message['movementX'])
+        print("message['movementY']:",message['movementY'])
+        
+        if message['movementX']>=0.0125:
+            movement_yaw=0.0125
+        elif message['movementX']<=-0.0125:
+            movement_yaw=-0.0125
+        else:
+            movement_yaw = message['movementX']
+
+        if message['movementY']>=0.0125 :
+            movement_pitch=0.0125
+        elif message['movementY']<=-0.0125:
+            movement_pitch=-0.0125
+        else:
+            movement_pitch = message['movementY']
+            
         # ==========================================
         #   自瞄控制设置和限制yaw和pitch的范围
         # ==========================================
-        print("self.gimbal_yaw: ",self.gimbal_yaw)
+        # print("self.gimbal_yaw: ",self.gimbal_yaw)
         if autoAim and self.auto_aim_cmd.tracking:
             # self.gimbal_pitch = max(self.auto_aim_cmd.aim_pitch, self.pitch_lower_bound)
             # if self.auto_aim_cmd.aim_pitch < self.pitch_lower_bound:
@@ -212,23 +225,21 @@ class RobotSocketHandler(Namespace):
             # else:
             #     self.gimbal_pitch = self.auto_aim_cmd.aim_pitch
             # shoot = False
-            movement_pitch = -self.auto_aim_cmd.aim_pitch*0.001
-            movement_yaw = -self.auto_aim_cmd.aim_yaw*0.001
+            # print("auto_aim holsding")
+            movement_pitch = self.auto_aim_cmd.aim_pitch
+            movement_yaw = self.auto_aim_cmd.aim_yaw
             if self.auto_aim_cmd.fire:
                 shoot = True 
         elif autoAim and not self.auto_aim_cmd.tracking:
             movement_pitch = 0
             movement_yaw = 0
+            # print("auto_aim holding but not tracking")
         else:
             if movement_pitch <= 0:            
                 self.gimbal_pitch = max(self.gimbal_pitch + movement_pitch, self.pitch_lower_bound)
             else:
                 self.gimbal_pitch = min(self.gimbal_pitch + movement_pitch, self.pitch_upper_bound)
         
-        # if autoAim:
-        #     self.gimbal_yaw = self.auto_aim_cmd.aim_yaw
-        # else:
-        #     self.gimbal_yaw = self.gimbal_yaw + movement_yaw
         self.gimbal_yaw = self.gimbal_yaw + movement_yaw
 
         # ==========================================
@@ -252,10 +263,6 @@ class BaseSocketHandler(Namespace):
     #    连接事件
     # ==========================================
     def on_connect(self):
-    #     global info_thread, node, robot_names, chosen_robot_dict
-    #     with thread_lock:RobotSocketHandler
-    #         if info_thread is None:
-    #             info_thread = socketio.start_background_task(ros_info_thread, node, robot_name)
         emit('robot_names', {'list': robot_names, 'chosen': chosen_robot_dict})
 
 
