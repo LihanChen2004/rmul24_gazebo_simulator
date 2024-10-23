@@ -227,7 +227,7 @@ class RobotSocketHandler(Namespace):
             # shoot = False
             # print("auto_aim holsding")
             movement_pitch = self.auto_aim_cmd.aim_pitch
-            movement_yaw = self.auto_aim_cmd.aim_yaw
+            movement_yaw = 0.01*self.auto_aim_cmd.aim_yaw
             if self.auto_aim_cmd.fire:
                 shoot = True 
         elif autoAim and not self.auto_aim_cmd.tracking:
