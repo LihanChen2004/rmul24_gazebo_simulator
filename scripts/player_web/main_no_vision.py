@@ -174,17 +174,9 @@ class RobotSocketHandler(Namespace):
                 self.supply_active=True
                 emit('supply', {'value': 'active'}, namespace='/'+self.robot_name)
         
-        if message['movementX'] < 0.00125 and message['movementX'] > -0.00125:
-            movement_yaw = 0
-        else:
-            movement_yaw = message['movementX']
+        movement_yaw = message['movementX'] if abs(message['movementX']) >= 0.00125 else 0
+        movement_pitch = message['movementY'] if abs(message['movementY']) >= 0.00125 else 0
 
-        print("movement_yaw:"+str(movement_yaw))
-        
-        if message['movementY'] < 0.00125 and message['movementY'] > -0.00125:
-            movement_pitch = 0
-        else:
-            movement_pitch = message['movementY']
         if movement_pitch<=0:
             self.gimbal_pitch = max(self.gimbal_pitch + movement_pitch, self.pitch_lower_bound)
         else:
