@@ -173,17 +173,16 @@ class RobotSocketHandler(Namespace):
             if self.rfid_status.supplier_area_is_triggered == True:
                 self.supply_active=True
                 emit('supply', {'value': 'active'}, namespace='/'+self.robot_name)
-        if message['movementX']>=0.0125:
-            movement_yaw=0.0125
-        elif message['movementX']<=-0.0125:
-            movement_yaw=-0.0125
+        
+        if message['movementX'] < 0.00125 and message['movementX'] > -0.00125:
+            movement_yaw = 0
         else:
             movement_yaw = message['movementX']
 
-        if message['movementY']>=0.0125 :
-            movement_pitch=0.0125
-        elif message['movementY']<=-0.0125:
-            movement_pitch=-0.0125
+        print("movement_yaw:"+str(movement_yaw))
+        
+        if message['movementY'] < 0.00125 and message['movementY'] > -0.00125:
+            movement_pitch = 0
         else:
             movement_pitch = message['movementY']
         if movement_pitch<=0:

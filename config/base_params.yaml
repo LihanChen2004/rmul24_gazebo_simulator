@@ -13,18 +13,18 @@
         cmdmax: 1000.0
     gimbal_controller:
       pitch_pid:
-        p: 11.0
-        i: 0.0
+        p: 10.0
+        i: 0.1
         d: 1.0
         imin: -1.0
         imax: 1.0
         cmdmin: -1000.0
         cmdmax: 1000.0
       yaw_pid:
-        p: 11.0
+        p: 10.0
         i: 0.0
-        d: 0.0
-        imin: -1.0
-        imax: 1.0
+        d: 1.0
+        imin: -0.2
+        imax: 0.2
         cmdmin: -1000.0
         cmdmax: 1000.0

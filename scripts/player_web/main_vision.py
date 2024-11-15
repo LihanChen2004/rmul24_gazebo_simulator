@@ -198,20 +198,23 @@ class RobotSocketHandler(Namespace):
         print("message['movementX']:",message['movementX'])
         print("message['movementY']:",message['movementY'])
         
-        if message['movementX']>=0.0125:
-            movement_yaw=0.0125
-        elif message['movementX']<=-0.0125:
-            movement_yaw=-0.0125
-        else:
-            movement_yaw = message['movementX']
+        # if message['movementX']>=0.0125:
+        #     movement_yaw=0.0125
+        # elif message['movementX']<=-0.0125:
+        #     movement_yaw=-0.0125
+        # else:
+        #     movement_yaw = message['movementX']
+        movement_yaw = message['movementX']
+        
 
-        if message['movementY']>=0.0125 :
-            movement_pitch=0.0125
-        elif message['movementY']<=-0.0125:
-            movement_pitch=-0.0125
-        else:
-            movement_pitch = message['movementY']
-            
+        # if message['movementY']>=0.0125 :
+        #     movement_pitch=0.0125
+        # elif message['movementY']<=-0.0125:
+        #     movement_pitch=-0.0125
+        # else:
+        #     movement_pitch = message['movementY']
+        movement_pitch = message['movementY']
+         
         # ==========================================
         #   自瞄控制设置和限制yaw和pitch的范围
         # ==========================================
@@ -226,8 +229,8 @@ class RobotSocketHandler(Namespace):
             #     self.gimbal_pitch = self.auto_aim_cmd.aim_pitch
             # shoot = False
             # print("auto_aim holsding")
-            movement_pitch = self.auto_aim_cmd.aim_pitch
-            movement_yaw = 0.01*self.auto_aim_cmd.aim_yaw
+            movement_pitch = 0.0625*self.auto_aim_cmd.aim_pitch
+            movement_yaw = 0.0625*self.auto_aim_cmd.aim_yaw
             if self.auto_aim_cmd.fire:
                 shoot = True 
         elif autoAim and not self.auto_aim_cmd.tracking:
