@@ -1086,13 +1086,13 @@
 			</sensor>
 		</link>
 		<!--livox-->
-		<joint name="right_livox_joint" type="fixed">
-			<pose relative_to="gimbal_yaw">0 -0.12 0.25 0 0 0</pose>
-			<parent>gimbal_yaw</parent>
-			<child>right_mid360</child>
+		<joint name="front_livox_joint" type="fixed">
+			<pose relative_to="chassis">0.16 0.0 0.18 0.5235987755982988 0.0 1.5707963267948966</pose>
+			<parent>chassis</parent>
+			<child>front_mid360</child>
 		</joint>
-		<link name="right_mid360">
-			<pose relative_to="right_livox_joint">0.0 0.0 0.0 0 0 0</pose>
+		<link name="front_mid360">
+			<pose relative_to="front_livox_joint">0.0 0.0 0.0 0 0 0</pose>
 			<inertial>
 				<pose>0 0 0.02 0 0 0</pose>
 				<mass>0.005</mass>
@@ -1113,13 +1113,13 @@
 					</mesh>
 				</geometry>
 			</visual>
-			<sensor name="right_mid360_imu" type="imu">
+			<sensor name="front_mid360_imu" type="imu">
 				<always_on>1</always_on>
 				<update_rate>200</update_rate>
 				<visualize>true</visualize>
 			</sensor>
-			<sensor name="right_mid360_lidar" type="gpu_lidar">
-				<ignition_frame_id>right_mid360</ignition_frame_id>
+			<sensor name="front_mid360_lidar" type="gpu_lidar">
+				<ignition_frame_id>front_mid360</ignition_frame_id>
 				<pose>0 0 0.03 0 0 0</pose>
 				<always_on>true</always_on>
 				<visualize>true</visualize>

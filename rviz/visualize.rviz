@@ -156,7 +156,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        right_mid360:
+        front_mid360:
           Alpha: 1
           Show Axes: false
           Show Trail: false
