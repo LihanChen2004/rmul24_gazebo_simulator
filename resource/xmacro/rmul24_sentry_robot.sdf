@@ -293,6 +293,8 @@
 				<limit>
 					<effort>100</effort>
 					<velocity>50</velocity>
+					<lower>-1.79769e+308</lower>
+					<upper>1.79769e+308</upper>
 				</limit>
 			</axis>
 		</joint>
