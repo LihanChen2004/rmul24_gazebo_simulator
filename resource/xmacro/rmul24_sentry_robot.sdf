@@ -10,6 +10,12 @@
 	<model name="rmul24_sentry_robot">
 		<pose>0 0 0.15 0 0 0</pose>
 		<!--chassis-->
+		<link name="base_footprint"/>
+		<joint name="base_to_chassis" type="fixed">
+			<pose>0 0 0.076 0 0 0</pose>
+			<parent>base_footprint</parent>
+			<child>chassis</child>
+		</joint>
 		<link name="chassis">
 			<inertial>
 				<pose>0 0 0.055 0 0 0</pose>
@@ -1125,7 +1131,7 @@
 				<pose>0 0 0.03 0 0 0</pose>
 				<always_on>true</always_on>
 				<visualize>true</visualize>
-				<update_rate>10.0</update_rate>
+				<update_rate>20.0</update_rate>
 				<ray>
 					<scan>
 						<horizontal>
