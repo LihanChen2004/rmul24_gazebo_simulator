@@ -9,13 +9,13 @@
 	<!--rmul24_sentry_robot model-->
 	<model name="rmul24_sentry_robot">
 		<pose>0 0 0.15 0 0 0</pose>
-		<!--chassis-->
 		<link name="base_footprint"/>
 		<joint name="base_to_chassis" type="fixed">
 			<pose>0 0 0.076 0 0 0</pose>
 			<parent>base_footprint</parent>
 			<child>chassis</child>
 		</joint>
+		<!--chassis-->
 		<link name="chassis">
 			<inertial>
 				<pose>0 0 0.055 0 0 0</pose>

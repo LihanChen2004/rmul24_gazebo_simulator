@@ -19,14 +19,18 @@ def generate_launch_description():
     remappings = [("/tf", "tf"), ("/tf_static", "tf_static")]
 
     pkg_simulator = get_package_share_directory("rmul24_gazebo_simulator")
-    robot_xmacro_path = os.path.join(pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf.xmacro")
-    robot_sdf_path = os.path.join(pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf")
+    robot_xmacro_path = os.path.join(
+        pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf.xmacro"
+    )
+    robot_sdf_path = os.path.join(
+        pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf"
+    )
     bridge_config = os.path.join(pkg_simulator, "config", "ros_gz_bridge.yaml")
     robot_config = os.path.join(pkg_simulator, "config", "base_params.yaml")
 
     # Get spawn robot init pose
     gz_world_path = os.path.join(pkg_simulator, "config", "gz_world.yaml")
-    with open(gz_world_path, 'r') as file:
+    with open(gz_world_path, "r") as file:
         config = yaml.safe_load(file)
         selected_world = config.get("world")
         robots = config["robots"].get(selected_world)
@@ -53,13 +57,20 @@ def generate_launch_description():
             package="ros_gz_sim",
             executable="create",
             arguments=[
-                "-string", robot_xml,
-                "-name", robot["name"],
-                "-allow_renaming", "true",
-                "-x", robot["x_pose"],
-                "-y", robot["y_pose"],
-                "-z", robot["z_pose"],
-                "-Y", robot["yaw"]
+                "-string",
+                robot_xml,
+                "-name",
+                robot["name"],
+                "-allow_renaming",
+                "true",
+                "-x",
+                robot["x_pose"],
+                "-y",
+                robot["y_pose"],
+                "-z",
+                robot["z_pose"],
+                "-Y",
+                robot["yaw"],
             ],
         )
 
@@ -75,10 +86,12 @@ def generate_launch_description():
             executable="robot_state_publisher",
             namespace=robot["name"],
             remappings=remappings,
-            parameters=[{
-                "use_sim_time": True,
-                "robot_description": robot_urdf_xml,
-            }],
+            parameters=[
+                {
+                    "use_sim_time": True,
+                    "robot_description": robot_urdf_xml,
+                }
+            ],
         )
 
         robot_ign_bridge = Node(

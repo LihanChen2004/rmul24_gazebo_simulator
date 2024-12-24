@@ -19,14 +19,16 @@ def generate_launch_description():
 
     declare_world_sdf_path = DeclareLaunchArgument(
         "world_sdf_path",
-        default_value=os.path.join(pkg_simulator, "resource", "worlds", "rmul_2024_world.sdf"),
-        description="Path to the world SDF file"
+        default_value=os.path.join(
+            pkg_simulator, "resource", "worlds", "rmul_2024_world.sdf"
+        ),
+        description="Path to the world SDF file",
     )
 
     declare_ign_config_path = DeclareLaunchArgument(
         "ign_config_path",
         default_value=os.path.join(pkg_simulator, "resource", "ign", "gui.config"),
-        description="Path to the Ignition Gazebo GUI configuration file"
+        description="Path to the Ignition Gazebo GUI configuration file",
     )
 
     # Set Gazebo plugin and resource path
@@ -43,7 +45,9 @@ def generate_launch_description():
     # Launch Gazebo simulator
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py")
+            os.path.join(
+                get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py"
+            )
         ),
         launch_arguments={
             "gz_version": "6",

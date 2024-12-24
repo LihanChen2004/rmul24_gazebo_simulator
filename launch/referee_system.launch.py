@@ -7,7 +7,9 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_simulator = get_package_share_directory("rmul24_gazebo_simulator")
 
-    referee_config_path = os.path.join(pkg_simulator, "config", "referee_system_1v1.yaml")
+    referee_config_path = os.path.join(
+        pkg_simulator, "config", "referee_system_1v1.yaml"
+    )
 
     referee_ign_bridge = Node(
         package="ros_gz_bridge",
