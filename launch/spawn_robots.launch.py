@@ -22,9 +22,6 @@ def generate_launch_description():
     robot_xmacro_path = os.path.join(
         pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf.xmacro"
     )
-    robot_sdf_path = os.path.join(
-        pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf"
-    )
     bridge_config = os.path.join(pkg_simulator, "config", "ros_gz_bridge.yaml")
     robot_config = os.path.join(pkg_simulator, "config", "base_params.yaml")
 
@@ -35,17 +32,20 @@ def generate_launch_description():
         selected_world = config.get("world")
         robots = config["robots"].get(selected_world)
 
-    robot_macro = XMLMacro4sdf()
-    robot_macro.set_xml_file(robot_xmacro_path)
-    urdf_generator = UrdfGenerator()
-    urdf_generator.parse_from_sdf_file(robot_sdf_path)
-    robot_urdf_xml = urdf_generator.to_string()
+    xmacro = XMLMacro4sdf()
+    xmacro.set_xml_file(robot_xmacro_path)
 
     ld = LaunchDescription()
 
     for robot in robots:
-        robot_macro.generate({"global_initial_color": robot["color"]})
-        robot_xml = robot_macro.to_string()
+        # Generate SDF from xmacro
+        xmacro.generate({"global_initial_color": robot["color"]})
+        robot_xml = xmacro.to_string()
+
+        # Generate URDF from SDF
+        urdf_generator = UrdfGenerator()
+        urdf_generator.parse_from_sdf_string(robot_xml)
+        robot_urdf_xml = urdf_generator.to_string()
 
         # replace the <robot_name> in the bridge config file
         aft_replace_ros_bridge_params = ReplaceString(
