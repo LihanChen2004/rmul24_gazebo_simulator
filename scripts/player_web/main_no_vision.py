@@ -119,7 +119,7 @@ class RobotSocketHandler(Namespace):
         # ==========================================
         self.rfid_status_sub = node.create_subscription(
             RfidStatusArray,
-            "/referee_system/ign/rfid_info",
+            "/referee_system/rfid_info",
             self.rfid_status_callback,
             10,
         )

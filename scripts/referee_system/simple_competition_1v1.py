@@ -154,21 +154,21 @@ class SimpleRefereeSystem:
         # ==========================================
         self.rfid_status_sub = node.create_subscription(
             RfidStatusArray,
-            "/referee_system/ign/rfid_info",
+            "/referee_system/rfid_info",
             self.rfid_status_callback,
             10,
         )
         self.attack_info_sub = node.create_subscription(
-            String, "/referee_system/ign/attack_info", self.attack_info_callback, 50
+            String, "/referee_system/attack_info", self.attack_info_callback, 50
         )
         self.shoot_info_sub = node.create_subscription(
-            String, "/referee_system/ign/shoot_info", self.shoot_info_callback, 50
+            String, "/referee_system/shoot_info", self.shoot_info_callback, 50
         )
         self.pose_info_sub = node.create_subscription(
-            TFMessage, "/referee_system/ign/pose_info", self.pose_info_callback, 50
+            TFMessage, "/referee_system/pose_info", self.pose_info_callback, 50
         )
         self.set_pose_pub = node.create_publisher(
-            TransformStamped, "/referee_system/ign/set_pose", 10
+            TransformStamped, "/referee_system/set_pose", 10
         )
         self.referee_cmd_sub = node.create_subscription(
             RefereeCmd, "/referee_system/referee_cmd", self.referee_cmd_callback, 1
@@ -288,7 +288,7 @@ class SimpleRefereeSystem:
                 red_survive = red_survive or robot.survive
             if "blue" in robot_name:
                 blue_survive = blue_survive or robot.survive
-        if red_survive == False or blue_survive == False:
+        if red_survive is False or blue_survive is False:
             self.game_over = True
         # publish robot status
         for robot in self.robots.values():
