@@ -1,4 +1,5 @@
 import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -21,6 +22,12 @@ def generate_launch_description():
         ],
     )
 
+    referee_ign_pose_bridge = Node(
+        package="rmoss_gz_bridge",
+        executable="pose_bridge",
+        namespace="referee_system",
+    )
+
     referee_ign_rfid_bridge = Node(
         package="rmoss_gz_bridge",
         executable="rfid_bridge",
@@ -37,6 +44,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     ld.add_action(referee_ign_bridge)
+    ld.add_action(referee_ign_pose_bridge)
     ld.add_action(referee_ign_rfid_bridge)
     ld.add_action(referee_system)
 
