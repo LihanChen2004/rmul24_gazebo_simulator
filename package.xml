@@ -24,6 +24,7 @@
 	<depend>rmoss_gz_cam</depend>
 	<depend>rmoss_gz_plugins</depend>
 	<depend>rmoss_gz_resources</depend>
+	<depend>pb2025_robot_description</depend>
 	<depend>sdformat_tools</depend>
 	<depend>vision_interfaces</depend>
 

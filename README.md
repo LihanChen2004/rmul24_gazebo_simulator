@@ -6,13 +6,13 @@
 
 rmul24_gazebo_simulator 是基于 Gazebo (Ignition 字母版本) 的仿真环境，为 RoboMaster University League 中的机器人算法开发提供仿真环境，方便测试 AI 算法，加快开发效率。
 
-目前 rmul24_gazebo_simulator 还不完善，仅提供以下功能：
+目前 rmul24_gazebo_simulator 提供以下功能：
 
-在 rmua19 标准机器人（rmua19_standard_robot）上增加相关传感器，构建不同机器人模型:
+- RMUL2024、RMUC2024 仿真世界模型
 
-- rmul24_sentry_robot：搭载云台相机 industrial_camera 和搭载激光雷达 rplidar_a2 和 Livox mid360，其中相机放置在 pitch 轴，mid360 倾斜放置于底盘。
+- 网页端局域网联机对战
 
-- 在 world 中使用 [PerformerDetector](https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/src/systems/performer_detector/PerformerDetector.hh) 插件实现区域 RFID 检测。仍在开发与裁判系统对接中
+- 机器人底盘、云台、射击控制
 
 | rmul_2024 | rmuc_2024 |
 |:-----------------:|:--------------:|
@@ -35,13 +35,14 @@ git clone https://github.com/LihanChen2004/rmoss_gazebo.git
 git clone https://github.com/LihanChen2004/rmoss_gz_resources.git --depth=1
 git clone https://github.com/gezp/sdformat_tools.git
 git clone https://github.com/LihanChen2004/rmul24_gazebo_simulator.git
+git clone https://github.com/SMBU-PolarBear-Robot-Team/pb2025_robot_description.git
 
 pip install xmacro
 ```
 
 ```sh
 cd ..
-colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+colcon build --symlink-install
 ```
 
 ### 1.2 启动仿真环境

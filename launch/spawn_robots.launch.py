@@ -19,8 +19,15 @@ def generate_launch_description():
     remappings = [("/tf", "tf"), ("/tf_static", "tf_static")]
 
     pkg_simulator = get_package_share_directory("rmul24_gazebo_simulator")
+    pkg_pb2025_robot_description = get_package_share_directory(
+        "pb2025_robot_description"
+    )
+
     robot_xmacro_path = os.path.join(
-        pkg_simulator, "resource", "xmacro", "rmul24_sentry_robot.sdf.xmacro"
+        pkg_pb2025_robot_description,
+        "resource",
+        "xmacro",
+        "pb2025_sentry_robot.sdf.xmacro",
     )
     bridge_config = os.path.join(pkg_simulator, "config", "ros_gz_bridge.yaml")
     robot_config = os.path.join(pkg_simulator, "config", "base_params.yaml")
