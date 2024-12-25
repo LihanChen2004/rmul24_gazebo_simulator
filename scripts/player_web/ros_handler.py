@@ -1,9 +1,6 @@
-from rmoss_interfaces.msg import ChassisCmd
-from rmoss_interfaces.msg import GimbalCmd
-from rmoss_interfaces.msg import ShootCmd
 from std_msgs.msg import Int32
 
-
+from rmoss_interfaces.msg import ChassisCmd, GimbalCmd, ShootCmd
 
 
 def publish_chassis_cmd_msg(pub, x, y, w):
@@ -36,8 +33,8 @@ def publish_shoot_cmd_msg(pub, num, vel):
     # print(msg)
     pub.publish(msg)
 
+
 def publish_reset_cmd_msg(pub):
     msg = Int32()
     msg.data = 500
     pub.publish(msg)
-

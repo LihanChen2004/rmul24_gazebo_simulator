@@ -1,37 +1,39 @@
 #!/usr/bin/python3
 import time
-import threading
-import rclpy
-from rclpy.node import Node
 
-from std_msgs.msg import Bool, String
-from rmoss_interfaces.msg import RefereeCmd,RobotStatus,RfidStatusArray
-from rmoss_interfaces.srv import ExchangeAmmon
+import rclpy
 from geometry_msgs.msg import TransformStamped
+from rclpy.node import Node
+from std_msgs.msg import Bool, String
 from tf2_msgs.msg import TFMessage
+
+from rmoss_interfaces.msg import RefereeCmd, RfidStatusArray, RobotStatus
+from rmoss_interfaces.srv import ExchangeAmmon
+
 
 def parse_attack_info(attack_str):
     # parse msg
-    info = attack_str.split(',')
+    info = attack_str.split(",")
     if len(info) < 2:
         return None
     # shooter info
-    shooter = info[0].split('/')
+    shooter = info[0].split("/")
     if len(shooter) != 2:
         return None
     shooter_model_name = shooter[0]
     shooter_name = shooter[1]
     # target info
-    target = info[1].split('/')
+    target = info[1].split("/")
     if len(target) != 4:
         return None
     target_model_name = target[1]
     target_link_name = target[2]
     target_collision_name = target[3]
     # print("target info:",target)
-    if target_collision_name != 'target_collision':
+    if target_collision_name != "target_collision":
         return None
     return shooter_model_name, shooter_name, target_model_name, target_link_name
+
 
 class GameTimer:
     def __init__(self):
@@ -59,23 +61,31 @@ class GameTimer:
             return time.time() - self.start_time
         else:
             return self.elapsed_time
+
+
 class StandardRobot:
-    def __init__(self,node,robot_name):
+    def __init__(self, node, robot_name):
         self.node = node
         self.initial_tf = None
         self.tf = None
         self.robot_name = robot_name
-        status_topic = '/referee_system/' + robot_name + '/robot_status'
+        status_topic = "/referee_system/" + robot_name + "/robot_status"
         self.status_pub = node.create_publisher(RobotStatus, status_topic, 10)
-        enable_control_topic = '/referee_system/' + robot_name + '/enable_control'
+        enable_control_topic = "/referee_system/" + robot_name + "/enable_control"
         self.enable_control_pub = node.create_publisher(Bool, enable_control_topic, 10)
-        enable_power_topic = '/referee_system/' + robot_name + '/enable_power'
+        enable_power_topic = "/referee_system/" + robot_name + "/enable_power"
         self.enable_power_pub = node.create_publisher(Bool, enable_power_topic, 10)
         self.reset_data()
 
     def reset_data(self):
-        self.max_hp = self.node.get_parameter("max_hp").get_parameter_value().integer_value
-        self.total_projectiles = self.node.get_parameter("initial_projectiles").get_parameter_value().integer_value
+        self.max_hp = (
+            self.node.get_parameter("max_hp").get_parameter_value().integer_value
+        )
+        self.total_projectiles = (
+            self.node.get_parameter("initial_projectiles")
+            .get_parameter_value()
+            .integer_value
+        )
         self.remain_hp = self.max_hp
         self.used_projectiles = 0
         self.hit_projectiles = 0
@@ -103,7 +113,7 @@ class StandardRobot:
         if self.initial_tf is None:
             self.initial_tf = tf
 
-    def supply_projectile(self,num):
+    def supply_projectile(self, num):
         self.total_projectiles = self.total_projectiles + num
 
     def consume_projectile(self):
@@ -123,66 +133,67 @@ class StandardRobot:
             msg.gt_tf = self.tf
         self.status_pub.publish(msg)
 
-class SimpleRefereeSystem():
-    def __init__(self,node):
+
+class SimpleRefereeSystem:
+    def __init__(self, node):
         self.node = node
-        self.node.declare_parameter('max_hp', 500)
-        self.node.declare_parameter('initial_projectiles', 100)
-        self.node.declare_parameter('initial_resources', 200)
+        self.node.declare_parameter("max_hp", 500)
+        self.node.declare_parameter("initial_projectiles", 100)
+        self.node.declare_parameter("initial_resources", 200)
         self.referee_game_time = None
         self.last_time = None
         self.timer = GameTimer()
         # ==========================================
         #   srv
         # ==========================================
-        self.exchange_ammo_srv = node.create_service(ExchangeAmmon, 
-                                                     '/exchange_ammo', 
-                                                     self.handle_exchange_ammo)
+        self.exchange_ammo_srv = node.create_service(
+            ExchangeAmmon, "/exchange_ammo", self.handle_exchange_ammo
+        )
         # ==========================================
         #   subs
         # ==========================================
         self.rfid_status_sub = node.create_subscription(
-            RfidStatusArray, 
-            '/referee_system/ign/rfid_info', 
-            self.rfid_status_callback, 
-            10)
+            RfidStatusArray,
+            "/referee_system/ign/rfid_info",
+            self.rfid_status_callback,
+            10,
+        )
         self.attack_info_sub = node.create_subscription(
-            String,
-            '/referee_system/ign/attack_info',
-            self.attack_info_callback,
-            50)
+            String, "/referee_system/ign/attack_info", self.attack_info_callback, 50
+        )
         self.shoot_info_sub = node.create_subscription(
-            String,
-            '/referee_system/ign/shoot_info',
-            self.shoot_info_callback,
-            50)
+            String, "/referee_system/ign/shoot_info", self.shoot_info_callback, 50
+        )
         self.pose_info_sub = node.create_subscription(
-            TFMessage,
-            '/referee_system/ign/pose_info',
-            self.pose_info_callback,
-            50)
+            TFMessage, "/referee_system/ign/pose_info", self.pose_info_callback, 50
+        )
         self.set_pose_pub = node.create_publisher(
-            TransformStamped,
-            '/referee_system/ign/set_pose',
-            10)
+            TransformStamped, "/referee_system/ign/set_pose", 10
+        )
         self.referee_cmd_sub = node.create_subscription(
-            RefereeCmd,
-            '/referee_system/referee_cmd',
-            self.referee_cmd_callback,
-            1)
+            RefereeCmd, "/referee_system/referee_cmd", self.referee_cmd_callback, 1
+        )
         self.robots = {}
-        self.robots['red_standard_robot1'] = StandardRobot(node = node, robot_name = 'red_standard_robot1')
-        self.robots['blue_standard_robot1'] = StandardRobot(node = node, robot_name = 'blue_standard_robot1')
+        self.robots["red_standard_robot1"] = StandardRobot(
+            node=node, robot_name="red_standard_robot1"
+        )
+        self.robots["blue_standard_robot1"] = StandardRobot(
+            node=node, robot_name="blue_standard_robot1"
+        )
         self.timer_cb = node.create_timer(0.5, self.timer_cb)
         self.attack_info_sub  # prevent unused variable warning
         self.timer_cb  # prevent unused variable warning
         self.game_over = False
 
         self.robots_rfid_status = RfidStatusArray()
-        self.initial_resources = self.node.get_parameter("initial_resources").get_parameter_value().integer_value
+        self.initial_resources = (
+            self.node.get_parameter("initial_resources")
+            .get_parameter_value()
+            .integer_value
+        )
         self.red_resources = self.initial_resources
         self.blue_resources = self.initial_resources
-        print('裁判系统初始化完成')
+        print("裁判系统初始化完成")
 
     def handle_exchange_ammo(self, request, response):
         # 判断是哪个阵营的机器人发出的请求
@@ -194,22 +205,22 @@ class SimpleRefereeSystem():
             response.success = False
             response.message = "Invalid robot name"
             return response
-        print('接收到弹丸兑换请求')
+        print("接收到弹丸兑换请求")
         # 检查是否有足够的资源来满足请求
         if request.ammo_amount > 0 and request.ammo_amount <= resources:
             resources -= request.ammo_amount
             response.success = True
             response.message = "Ammo exchanged successfully"
-            print('弹丸兑换成功')
+            print("弹丸兑换成功")
             # 增加弹丸上限
             if request.robot_name in self.robots.keys():
                 self.robots[request.robot_name].supply_projectile(request.ammo_amount)
         else:
             response.success = False
             response.message = "Not enough resources, resources left: " + str(resources)
-            print('弹丸兑换失败')
+            print("弹丸兑换失败")
         return response
-    
+
     def rfid_status_callback(self, message):
         self.robots_rfid_status = message
 
@@ -224,7 +235,7 @@ class SimpleRefereeSystem():
         target_model_name = data[2]
         target_link_name = data[3]
         # process attack info
-        if 'armor' in target_link_name:
+        if "armor" in target_link_name:
             if target_model_name in self.robots.keys():
                 self.robots[target_model_name].update_hp(-10)
         if shooter_model_name in self.robots.keys():
@@ -233,10 +244,10 @@ class SimpleRefereeSystem():
     def shoot_info_callback(self, msg: String):
         if self.game_over:
             return
-        info = msg.data.split(',')
+        info = msg.data.split(",")
         if len(info) < 2:
             return
-        shooter = info[0].split('/')
+        shooter = info[0].split("/")
         if len(shooter) != 2:
             return
         shooter_model_name = shooter[0]
@@ -257,12 +268,12 @@ class SimpleRefereeSystem():
         if self.game_over:
             return
         # print(self.timer.get_time())
-        if self.timer.get_time() % 30 <0.5 and self.timer.get_time() > 29:
+        if self.timer.get_time() % 30 < 0.5 and self.timer.get_time() > 29:
             self.last_time = self.timer.get_time()
             self.red_resources += 50
             self.blue_resources += 50
-            print('资源增加红方：',self.red_resources)
-            print('资源增加蓝方：',self.blue_resources)
+            print("资源增加红方：", self.red_resources)
+            print("资源增加蓝方：", self.blue_resources)
         # check survive
         for robot in self.robots.values():
             if robot.survive and robot.remain_hp == 0:
@@ -273,9 +284,9 @@ class SimpleRefereeSystem():
         red_survive = False
         blue_survive = False
         for robot_name, robot in self.robots.items():
-            if 'red' in robot_name:
+            if "red" in robot_name:
                 red_survive = red_survive or robot.survive
-            if 'blue' in robot_name:
+            if "blue" in robot_name:
                 blue_survive = blue_survive or robot.survive
         if red_survive == False or blue_survive == False:
             self.game_over = True
@@ -333,14 +344,16 @@ class SimpleRefereeSystem():
                 robot.remain_hp = robot.max_hp
                 robot.survive = True
 
+
 def main(args=None):
     rclpy.init(args=args)
-    node = Node('referee_system')
+    node = Node("referee_system")
     referee_system = SimpleRefereeSystem(node)
     rclpy.spin(node)
     referee_system
     node.destroy_node()
     rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
