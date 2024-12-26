@@ -30,12 +30,12 @@ rmul24_gazebo_simulator 是基于 Gazebo (Ignition 字母版本) 的仿真环境
 cd ~/ros_ws/src
 
 git clone https://github.com/gezp/sdformat_tools.git
-git clone https://github.com/SMBU-PolarBear-Robot-Team/rmoss_interfaces.git
-git clone https://github.com/SMBU-PolarBear-Robot-Team/rmoss_core.git
-git clone https://github.com/SMBU-PolarBear-Robot-Team/rmoss_gazebo.git
-git clone https://github.com/SMBU-PolarBear-Robot-Team/rmoss_gz_resources.git --depth=1
-git clone https://github.com/SMBU-PolarBear-Robot-Team/rmul24_gazebo_simulator.git
-git clone https://github.com/SMBU-PolarBear-Robot-Team/pb2025_robot_description.git
+git clone https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_interfaces.git
+git clone https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_core.git
+git clone https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_gazebo.git
+git clone https://github.com/SMBU-PolarBear-Robotics-Team/rmoss_gz_resources.git --depth=1
+git clone https://github.com/SMBU-PolarBear-Robotics-Team/rmul24_gazebo_simulator.git
+git clone https://github.com/SMBU-PolarBear-Robotics-Team/pb2025_robot_description.git
 
 pip install xmacro
 ```
@@ -106,7 +106,7 @@ colcon build --symlink-install
 
 - 2025 SMBU PolarBear Sentry Navigation
 
-    [pb2025_sentry_nav](https://github.com/SMBU-PolarBear-Robot-Team/pb2025_sentry_nav.git)
+    [pb2025_sentry_nav](https://github.com/SMBU-PolarBear-Robotics-Team/pb2025_sentry_nav.git)
 
     ![cmu_nav_v1_0](https://raw.githubusercontent.com/LihanChen2004/picx-images-hosting/master/spin_nav.1ove3nw63o.gif)
 
